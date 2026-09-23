@@ -1,0 +1,171 @@
+// The JK Blue theme map.
+//
+// Frappe v16's desk is built entirely on CSS variables, and almost every
+// component derives from two primitive ramps (--gray-* and --blue-*) plus a
+// small set of semantic variables. Re-pointing those ramps re-skins every
+// module, list, form, report and dialog in the installation at once, including
+// apps that do not exist yet, without touching a single line of core markup.
+//
+// Everything below is scoped to the JK Blue theme, so the stock Light and Dark
+// themes are left exactly as Frappe ships them.
+
+#{$jk} {
+	// ---- Primitive ramps -------------------------------------------------
+	// Frappe's greys are neutral; ours carry a blue cast, so every surface,
+	// border and muted label across the desk picks up the brand automatically.
+	--gray-50: var(--jk-slate-50);
+	--gray-100: var(--jk-slate-100);
+	--gray-200: var(--jk-slate-200);
+	--gray-300: var(--jk-slate-300);
+	--gray-400: var(--jk-slate-400);
+	--gray-500: var(--jk-slate-500);
+	--gray-600: var(--jk-slate-600);
+	--gray-700: var(--jk-slate-700);
+	--gray-800: var(--jk-slate-800);
+	--gray-900: var(--jk-slate-900);
+
+	--blue-50: var(--jk-blue-50);
+	--blue-100: var(--jk-blue-100);
+	--blue-200: var(--jk-blue-200);
+	--blue-300: var(--jk-blue-300);
+	--blue-400: var(--jk-blue-400);
+	--blue-500: var(--jk-blue-500);
+	--blue-600: var(--jk-blue-600);
+	--blue-700: var(--jk-blue-700);
+	--blue-800: var(--jk-blue-800);
+	--blue-900: var(--jk-blue-900);
+
+	// ---- Brand -----------------------------------------------------------
+	// Stock v16 uses near-black for primary actions. Blue is the single most
+	// visible change in the whole theme.
+	--primary: var(--jk-primary);
+	--primary-color: var(--jk-primary);
+	--brand-color: var(--jk-primary);
+	--btn-primary: var(--jk-primary);
+	--progress-bar-bg: var(--jk-primary);
+	--checkbox-color: var(--jk-primary);
+	--sidebar-select-color: var(--jk-primary-light);
+	--star-fill: var(--jk-amber-500);
+
+	// ---- Layout surfaces -------------------------------------------------
+	--bg-color: var(--jk-background);
+	--fg-color: var(--jk-surface);
+	--card-bg: var(--jk-card);
+	--navbar-bg: var(--jk-surface);
+	--modal-bg: var(--jk-surface);
+	--popover-bg: var(--jk-surface);
+	--toast-bg: var(--jk-surface);
+	--subtle-fg: var(--jk-surface-sunken);
+	--subtle-accent: var(--jk-slate-50);
+	--fg-hover-color: var(--jk-hover-bg);
+	--awesomplete-hover-bg: var(--jk-hover-bg);
+	--awesomebar-focus-bg: var(--jk-surface);
+	--skeleton-bg: var(--jk-slate-100);
+	--code-block-bg: var(--jk-slate-900);
+	--code-block-text: var(--jk-slate-100);
+
+	// ---- Type ------------------------------------------------------------
+	--text-color: var(--jk-text);
+	--heading-color: var(--jk-text);
+	--text-neutral: var(--jk-text);
+	--text-dark: var(--jk-text);
+	--text-light: var(--jk-text-muted);
+	--text-muted: var(--jk-text-muted);
+	--placeholder-color: var(--jk-text-disabled);
+	--disabled-text-color: var(--jk-text-disabled);
+
+	// ---- Borders ---------------------------------------------------------
+	--border-color: var(--jk-border);
+	--table-border-color: var(--jk-border);
+	--dark-border-color: var(--jk-border-strong);
+	--border-primary: var(--jk-primary);
+	--btn-group-border-color: var(--jk-border);
+
+	// ---- Controls --------------------------------------------------------
+	--control-bg: var(--jk-surface);
+	--control-bg-on-gray: var(--jk-surface);
+	--disabled-control-bg: var(--jk-disabled-bg);
+	--input-disabled-bg: var(--jk-disabled-bg);
+	--switch-bg: var(--jk-slate-300);
+
+	// ---- Buttons ---------------------------------------------------------
+	--btn-default-bg: var(--jk-surface);
+	--btn-default-hover-bg: var(--jk-slate-100);
+	--btn-ghost-hover-bg: var(--jk-hover-bg);
+	--btn-shadow: var(--jk-shadow-xs);
+
+	// ---- Elevation and shape --------------------------------------------
+	--shadow-xs: var(--jk-shadow-xs);
+	--shadow-sm: var(--jk-shadow-sm);
+	--shadow-base: var(--jk-shadow-sm);
+	--shadow-md: var(--jk-shadow-md);
+	--shadow-lg: var(--jk-shadow-lg);
+	--shadow-xl: var(--jk-shadow-lg);
+	--shadow-2xl: var(--jk-shadow-xl);
+	--card-shadow: var(--jk-shadow-sm);
+	--modal-shadow: var(--jk-shadow-xl);
+	--custom-shadow-sm: var(--jk-shadow-sm);
+
+	--border-radius-tiny: var(--jk-radius-xs);
+	--border-radius-sm: var(--jk-radius-sm);
+	--border-radius: var(--jk-radius-md);
+	--border-radius-md: var(--jk-radius-md);
+	--border-radius-lg: var(--jk-radius-lg);
+	--border-radius-xl: var(--jk-radius-xl);
+	--border-radius-2xl: var(--jk-radius-2xl);
+	--border-radius-full: var(--jk-radius-pill);
+
+	// ---- Focus -----------------------------------------------------------
+	// A visible blue ring everywhere is both the brand and the accessibility
+	// requirement; keyboard focus must never be silent.
+	--focus-default: var(--jk-focus-ring);
+	--focus-blue: var(--jk-focus-ring);
+	--checkbox-focus-shadow: var(--jk-focus-ring);
+	--highlight-color: var(--jk-primary-light);
+	--highlight-shadow: var(--jk-focus-ring);
+
+	// ---- Semantic surfaces ----------------------------------------------
+	--alert-bg-success: var(--jk-success-bg);
+	--alert-text-success: var(--jk-green-700);
+	--alert-bg-warning: var(--jk-warning-bg);
+	--alert-text-warning: var(--jk-amber-700);
+	--alert-bg-danger: var(--jk-danger-bg);
+	--alert-text-danger: var(--jk-red-700);
+	--alert-bg-info: var(--jk-info-bg);
+	--alert-text-info: var(--jk-blue-700);
+	--error-bg: var(--jk-danger-bg);
+	--error-border: var(--jk-danger-border);
+	--danger: var(--jk-danger);
+
+	--bg-blue: var(--jk-blue-50);
+	--text-on-blue: var(--jk-blue-700);
+	--bg-light-blue: var(--jk-blue-50);
+	--text-on-light-blue: var(--jk-blue-700);
+	--bg-green: var(--jk-success-bg);
+	--text-on-green: var(--jk-green-700);
+	--bg-orange: var(--jk-warning-bg);
+	--text-on-orange: var(--jk-amber-700);
+	--bg-red: var(--jk-danger-bg);
+	--text-on-red: var(--jk-red-700);
+	--bg-gray: var(--jk-neutral-bg);
+	--text-on-gray: var(--jk-text-muted);
+	--bg-grey: var(--jk-neutral-bg);
+	--text-on-grey: var(--jk-text-muted);
+	--bg-light-gray: var(--jk-slate-50);
+	--text-on-light-gray: var(--jk-text-muted);
+
+	// ---- Scrollbars ------------------------------------------------------
+	--scrollbar-track-color: transparent;
+	--scrollbar-thumb-color: var(--jk-slate-300);
+
+	// ---- Charts ----------------------------------------------------------
+	// frappe-charts reads these, so dashboards inherit the theme too.
+	--charts-label-color: var(--jk-text-muted);
+	--charts-legend-label: var(--jk-text-secondary);
+	--charts-axis-line-color: var(--jk-border);
+	--charts-tooltip-bg: var(--jk-slate-900);
+	--charts-tooltip-title: var(--jk-slate-300);
+	--charts-tooltip-label: var(--jk-slate-300);
+	--charts-tooltip-value: var(--jk-slate-0);
+	--charts-dataset-circle-stroke: var(--jk-surface);
+}

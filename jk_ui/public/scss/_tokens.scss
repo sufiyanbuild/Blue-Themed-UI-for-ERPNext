@@ -1,0 +1,125 @@
+// JK UI design tokens.
+//
+// These are primitives only. Nothing here paints anything on its own: they are
+// custom properties on :root that cost nothing until a theme map binds them to
+// a Frappe variable in _theme.scss. Keeping them theme-independent means a
+// second theme (a JK Dark, say) is one more map file and no refactor.
+
+:root {
+	// Brand blue. 600 is the primary; 500 lifts it for hover on dark,
+	// 700 deepens it for pressed states.
+	--jk-blue-50: #eef5ff;
+	--jk-blue-100: #dbe8ff;
+	--jk-blue-200: #bcd5ff;
+	--jk-blue-300: #8fb8ff;
+	--jk-blue-400: #5b93ff;
+	--jk-blue-500: #2f6dfb;
+	--jk-blue-600: #1a52e8;
+	--jk-blue-700: #143fbe;
+	--jk-blue-800: #143697;
+	--jk-blue-900: #152f78;
+	--jk-blue-950: #0e1e4b;
+
+	// Neutrals carry a blue cast so greys never read as muddy next to the brand.
+	--jk-slate-0: #ffffff;
+	--jk-slate-25: #fbfcff;
+	--jk-slate-50: #f4f7fd;
+	--jk-slate-100: #eef2fa;
+	--jk-slate-200: #e2e8f3;
+	--jk-slate-300: #cfd8e8;
+	--jk-slate-400: #a8b4c8;
+	--jk-slate-500: #7a8798;
+	--jk-slate-600: #5f6d80;
+	--jk-slate-700: #3c4756;
+	--jk-slate-800: #27303d;
+	--jk-slate-900: #16202e;
+
+	// Semantic ramps. Each has a surface, a border and a foreground so badges,
+	// alerts and indicators can be built from one triplet.
+	--jk-green-50: #ecfdf3;
+	--jk-green-200: #b6ecc9;
+	--jk-green-500: #16a34a;
+	--jk-green-700: #0f7a37;
+
+	--jk-amber-50: #fff7ea;
+	--jk-amber-200: #fadfae;
+	--jk-amber-500: #d97706;
+	--jk-amber-700: #a85c05;
+
+	--jk-red-50: #fef2f2;
+	--jk-red-200: #f8c9c9;
+	--jk-red-500: #dc2626;
+	--jk-red-700: #b01c1c;
+
+	// ---- Semantic aliases: this is the layer the rest of the app speaks ----
+	--jk-primary: var(--jk-blue-600);
+	--jk-primary-hover: var(--jk-blue-700);
+	--jk-primary-active: var(--jk-blue-800);
+	--jk-primary-light: var(--jk-blue-50);
+	--jk-primary-subtle: var(--jk-blue-100);
+	--jk-primary-dark: var(--jk-blue-900);
+	--jk-secondary: var(--jk-blue-800);
+	--jk-accent: var(--jk-blue-400);
+	--jk-on-primary: #ffffff;
+
+	--jk-background: var(--jk-slate-50);
+	--jk-surface: var(--jk-slate-0);
+	--jk-surface-raised: var(--jk-slate-0);
+	--jk-surface-sunken: var(--jk-slate-100);
+	--jk-card: var(--jk-slate-0);
+
+	--jk-border: var(--jk-slate-200);
+	--jk-border-strong: var(--jk-slate-300);
+	--jk-border-subtle: var(--jk-slate-100);
+
+	--jk-text: var(--jk-slate-900);
+	--jk-text-secondary: var(--jk-slate-700);
+	--jk-text-muted: var(--jk-slate-600);
+	--jk-text-disabled: var(--jk-slate-400);
+
+	--jk-success: var(--jk-green-500);
+	--jk-success-bg: var(--jk-green-50);
+	--jk-success-border: var(--jk-green-200);
+	--jk-warning: var(--jk-amber-500);
+	--jk-warning-bg: var(--jk-amber-50);
+	--jk-warning-border: var(--jk-amber-200);
+	--jk-danger: var(--jk-red-500);
+	--jk-danger-bg: var(--jk-red-50);
+	--jk-danger-border: var(--jk-red-200);
+	--jk-info: var(--jk-blue-600);
+	--jk-info-bg: var(--jk-blue-50);
+	--jk-info-border: var(--jk-blue-200);
+	--jk-neutral-fg: var(--jk-slate-600);
+	--jk-neutral-bg: var(--jk-slate-100);
+	--jk-neutral-border: var(--jk-slate-200);
+
+	// Interaction
+	--jk-hover-bg: var(--jk-blue-50);
+	--jk-active-bg: var(--jk-blue-100);
+	--jk-selected-bg: var(--jk-blue-50);
+	--jk-disabled-bg: var(--jk-slate-100);
+	--jk-focus-ring: 0 0 0 3px rgba(26, 82, 232, 0.22);
+	--jk-focus-ring-danger: 0 0 0 3px rgba(220, 38, 38, 0.2);
+
+	// Elevation. Blue-tinted rather than neutral black so cards sit on the
+	// blue-grey page without looking dirty.
+	--jk-shadow-xs: 0 1px 2px rgba(20, 40, 80, 0.05);
+	--jk-shadow-sm: 0 1px 2px rgba(20, 40, 80, 0.06), 0 1px 3px rgba(20, 40, 80, 0.05);
+	--jk-shadow-md: 0 2px 4px rgba(20, 40, 80, 0.05), 0 4px 12px rgba(20, 40, 80, 0.07);
+	--jk-shadow-lg: 0 4px 8px rgba(20, 40, 80, 0.06), 0 12px 28px rgba(20, 40, 80, 0.1);
+	--jk-shadow-xl: 0 8px 16px rgba(20, 40, 80, 0.08), 0 24px 48px rgba(20, 40, 80, 0.12);
+
+	// Shape
+	--jk-radius-xs: 4px;
+	--jk-radius-sm: 6px;
+	--jk-radius-md: 8px;
+	--jk-radius-lg: 12px;
+	--jk-radius-xl: 16px;
+	--jk-radius-2xl: 20px;
+	--jk-radius-pill: 999px;
+
+	// Motion. Deliberately short; this is an ERP, not a landing page.
+	--jk-duration-fast: 90ms;
+	--jk-duration: 140ms;
+	--jk-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}

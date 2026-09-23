@@ -1,0 +1,34 @@
+// Theme switcher dialog.
+//
+// Deliberately NOT scoped to the JK Blue theme: a user sitting in stock Light
+// has to be able to open this dialog and see the JK Blue card, so these rules
+// must apply in every theme. It is the only unscoped block in the app, and it
+// changes layout only — no colours are imposed on the stock themes.
+
+.modal-body .theme-grid {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+
+	@media (max-width: 767px) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.theme-title {
+		font-size: var(--text-md);
+		font-weight: 500;
+	}
+}
+
+// The JK Blue preview card paints itself from the theme map, because the
+// preview markup carries data-theme="jk-blue" and the map is an attribute
+// selector. The one thing it cannot show is the brand accent, so the toolbar
+// swatch inside the preview is given the primary colour explicitly.
+.modal-body .theme-grid [data-theme="jk-blue"] {
+	.toolbar .primary {
+		background-color: var(--jk-primary);
+	}
+
+	.navbar {
+		background-color: var(--jk-surface);
+		border-bottom: 1px solid var(--jk-border);
+	}
+}

@@ -5,6 +5,28 @@ app_description = "Modern blue design system and global UI layer for Frappe and 
 app_email = "sufiyanshaikh1414@gmail.com"
 app_license = "mit"
 
+# ---------------------------------------------------------------------------
+# Global UI layer
+# ---------------------------------------------------------------------------
+# One stylesheet and one small script, loaded on every desk page. The
+# stylesheet is scoped entirely to [data-theme="jk blue"], so with any other
+# theme selected it paints nothing and costs only its parse time. This is what
+# makes the theme switchable off, and the app uninstallable, with no residue.
+app_include_css = "jk_ui.bundle.css"
+app_include_js = "jk_ui.bundle.js"
+
+# Adds "JK Blue" to the User.desk_theme select options. Re-applied on migrate
+# so a Frappe upgrade that rewrites the field self-heals; removed again on
+# uninstall, after moving anyone still using it back to Light.
+after_install = "jk_ui.setup.install.after_install"
+after_migrate = "jk_ui.setup.install.after_migrate"
+before_uninstall = "jk_ui.setup.install.before_uninstall"
+
+fixtures = [
+	{"dt": "Property Setter", "filters": [["name", "=", "User-desk_theme-options"]]},
+]
+
+
 # Apps
 # ------------------
 

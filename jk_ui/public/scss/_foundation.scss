@@ -1,0 +1,273 @@
+// JK UI foundation layer.
+//
+// Everything the theme map cannot express as a variable: shape, elevation and
+// interaction states on the primitives that every page is assembled from.
+// Component-level work (sidebar, workspace, list, form, dialogs) layers on top
+// of this in later files and relies on these defaults.
+
+#{$jk} {
+	// Text rendering. Frappe's stack is already Inter-based; this just stops
+	// it looking heavy on macOS retina panels.
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	body {
+		background-color: var(--jk-background);
+		color: var(--jk-text);
+	}
+
+	::selection {
+		background: var(--jk-primary-subtle);
+		color: var(--jk-blue-900);
+	}
+
+	// ---- Scrollbars ------------------------------------------------------
+	// Thin and only visible against content, so dense tables do not gain a
+	// heavy grey gutter.
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--jk-slate-300) transparent;
+	}
+
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--jk-slate-300);
+		border: 3px solid transparent;
+		border-radius: var(--jk-radius-pill);
+		background-clip: content-box;
+
+		&:hover {
+			background: var(--jk-slate-400);
+			background-clip: content-box;
+		}
+	}
+
+	// ---- Links -----------------------------------------------------------
+	a,
+	.link-underline {
+		color: var(--jk-primary);
+		transition: color var(--jk-duration-fast) var(--jk-ease);
+
+		&:hover {
+			color: var(--jk-primary-hover);
+		}
+	}
+
+	// ---- Focus -----------------------------------------------------------
+	// One consistent ring. Only for keyboard users, so mouse interaction
+	// stays quiet, but never removed: it is the accessibility floor.
+	:focus-visible {
+		outline: none;
+		box-shadow: var(--jk-focus-ring);
+		border-radius: var(--jk-radius-sm);
+	}
+
+	// ---- Buttons ---------------------------------------------------------
+	.btn {
+		border-radius: var(--jk-radius-md);
+		font-weight: 500;
+		transition:
+			background-color var(--jk-duration-fast) var(--jk-ease),
+			box-shadow var(--jk-duration-fast) var(--jk-ease),
+			border-color var(--jk-duration-fast) var(--jk-ease);
+
+		&:focus-visible {
+			box-shadow: var(--jk-focus-ring);
+		}
+
+		&:disabled,
+		&.disabled {
+			opacity: 1;
+			background-color: var(--jk-disabled-bg);
+			color: var(--jk-text-disabled);
+			box-shadow: none;
+			cursor: not-allowed;
+		}
+	}
+
+	// Primary actions are the one place blue is allowed to be loud.
+	.btn.btn-primary {
+		background-color: var(--jk-primary);
+		color: var(--jk-on-primary);
+		box-shadow: var(--jk-shadow-xs);
+
+		&:hover:not(:disabled) {
+			background-color: var(--jk-primary-hover);
+		}
+
+		// Stock v16 flips this to black on press; keep it in the blue family.
+		&:active:not(:disabled) {
+			background-color: var(--jk-primary-active) !important;
+			color: var(--jk-on-primary) !important;
+		}
+
+		&:disabled {
+			background-color: var(--jk-blue-200);
+			color: var(--jk-blue-50);
+		}
+	}
+
+	.btn.btn-default,
+	.btn.btn-secondary {
+		background-color: var(--jk-surface);
+		color: var(--jk-text-secondary);
+		border: 1px solid var(--jk-border);
+
+		&:hover:not(:disabled) {
+			background-color: var(--jk-slate-50);
+			border-color: var(--jk-border-strong);
+			color: var(--jk-text);
+		}
+	}
+
+	.btn.btn-danger {
+		background-color: var(--jk-danger);
+		color: #fff;
+
+		&:focus-visible {
+			box-shadow: var(--jk-focus-ring-danger);
+		}
+	}
+
+	// Tertiary / ghost: no chrome until pointed at.
+	.btn.btn-link,
+	.btn.btn-ghost,
+	.btn-reset {
+		&:hover:not(:disabled) {
+			background-color: var(--jk-hover-bg);
+			color: var(--jk-primary);
+		}
+	}
+
+	// Loading state. Frappe adds .btn .disabled while an action is in flight;
+	// a quiet pulse reads as progress without adding a spinner to the DOM.
+	.btn[data-loading="true"] {
+		position: relative;
+		pointer-events: none;
+		animation: jk-pulse 1.1s var(--jk-ease) infinite;
+	}
+
+	// ---- Inputs ----------------------------------------------------------
+	// Stock v16 uses borderless filled inputs. Bordered white fields read as
+	// more deliberate against a blue-grey page and make required/invalid
+	// states legible.
+	.form-control,
+	.input-with-feedback,
+	select.form-control {
+		background-color: var(--jk-surface);
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-md);
+		color: var(--jk-text);
+		transition:
+			border-color var(--jk-duration-fast) var(--jk-ease),
+			box-shadow var(--jk-duration-fast) var(--jk-ease);
+
+		&::placeholder {
+			color: var(--jk-text-disabled);
+		}
+
+		&:hover:not(:disabled):not([readonly]) {
+			border-color: var(--jk-border-strong);
+		}
+
+		&:focus {
+			border-color: var(--jk-primary);
+			box-shadow: var(--jk-focus-ring);
+			background-color: var(--jk-surface);
+		}
+
+		&:disabled,
+		&[readonly] {
+			background-color: var(--jk-disabled-bg);
+			border-color: var(--jk-border-subtle);
+			color: var(--jk-text-muted);
+		}
+
+		&.invalid,
+		&.has-error {
+			border-color: var(--jk-danger);
+
+			&:focus {
+				box-shadow: var(--jk-focus-ring-danger);
+			}
+		}
+	}
+
+	.control-label {
+		color: var(--jk-text-muted);
+		font-weight: 500;
+	}
+
+	// ---- Surfaces --------------------------------------------------------
+	// Frappe builds workspaces, dashboards and shortcuts out of .widget, so
+	// one rule here gives every workspace in every app the card treatment.
+	.widget,
+	.frappe-card,
+	.form-section-card,
+	.new-timeline .timeline-items .timeline-item .timeline-content {
+		background-color: var(--jk-card);
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-lg);
+		box-shadow: var(--jk-shadow-xs);
+	}
+
+	.widget {
+		transition:
+			box-shadow var(--jk-duration) var(--jk-ease),
+			border-color var(--jk-duration) var(--jk-ease);
+
+		&:hover {
+			box-shadow: var(--jk-shadow-md);
+			border-color: var(--jk-border-strong);
+		}
+	}
+
+	.modal-content {
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-xl);
+		box-shadow: var(--jk-shadow-xl);
+	}
+
+	// ---- Status system ---------------------------------------------------
+	// Frappe already tags every document state with a colour class. Mapping
+	// those classes once gives consistent badges across every DocType in the
+	// installation, standard or custom, with no per-DocType configuration.
+	.indicator-pill {
+		border-radius: var(--jk-radius-pill);
+		font-weight: 500;
+		border: 1px solid transparent;
+
+		&.green { background: var(--jk-success-bg); color: var(--jk-green-700); border-color: var(--jk-success-border); }
+		&.blue  { background: var(--jk-info-bg);    color: var(--jk-blue-700);  border-color: var(--jk-info-border); }
+		&.orange, &.yellow { background: var(--jk-warning-bg); color: var(--jk-amber-700); border-color: var(--jk-warning-border); }
+		&.red   { background: var(--jk-danger-bg);  color: var(--jk-red-700);   border-color: var(--jk-danger-border); }
+		&.gray, &.grey, &.darkgrey { background: var(--jk-neutral-bg); color: var(--jk-text-muted); border-color: var(--jk-neutral-border); }
+	}
+}
+
+@keyframes jk-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.65; }
+}
+
+// Respect the system setting. Anyone who has asked for reduced motion gets a
+// completely still interface.
+@media (prefers-reduced-motion: reduce) {
+	#{$jk} {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+}

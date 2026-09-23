@@ -1,0 +1,18 @@
+// JK UI — global design system for Frappe and ERPNext.
+//
+// Load order matters:
+//   1. tokens     — the --jk-* primitives and semantic aliases
+//   2. theme      — binds those tokens onto Frappe's own CSS variables
+//   3. foundation — shape, elevation and interaction on shared primitives
+//   4. switcher   — the theme picker itself (the one unscoped block)
+//
+// Every rule in 2-3 is scoped to $jk, so with any other theme selected this
+// stylesheet paints nothing at all. That is what makes the theme safe to
+// switch off and the app safe to uninstall.
+
+$jk: '[data-theme="jk blue"], [data-theme="jk-blue"]';
+
+@import "tokens";
+@import "theme";
+@import "foundation";
+@import "switcher";
