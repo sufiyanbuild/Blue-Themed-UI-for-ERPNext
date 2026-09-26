@@ -1,0 +1,364 @@
+// Workspace widgets.
+//
+// Frappe builds every workspace from six widget types, and each one is
+// rendered by the framework rather than by the app that owns the workspace.
+// Styling them here means Selling, Stock, HR, a custom app's workspace and one
+// created next month all get the same treatment, with no per-workspace CSS and
+// nothing hardcoded about any particular shortcut, card or chart.
+//
+//   .shortcut-widget-box    quick actions
+//   .number-widget-box      KPI / number cards
+//   .dashboard-widget-box   charts
+//   .links-widget-box       grouped document links
+//   .quick-list-widget-box  recent documents
+//   .onboarding-widget-box  setup checklists
+
+#{$jk} {
+	// ======================================================================
+	// Shortcut — the quick action
+	// ======================================================================
+	// The whole card is the target, so it should behave like one: a single
+	// hover state, an arrow that commits to the direction of travel, and the
+	// record count kept as a quiet piece of data on the right.
+	.widget.shortcut-widget-box {
+		cursor: pointer;
+		justify-content: center;
+		min-height: 62px;
+
+		.widget-head {
+			align-items: center;
+			width: 100%;
+		}
+
+		.widget-title {
+			font-size: var(--text-base);
+			font-weight: 550;
+			color: var(--jk-text);
+		}
+
+		.widget-control {
+			align-items: center;
+			gap: 8px;
+
+			// The trailing chevron Frappe appends.
+			svg {
+				color: var(--jk-text-disabled);
+				transition:
+					transform var(--jk-duration) var(--jk-ease),
+					color var(--jk-duration) var(--jk-ease);
+			}
+		}
+
+		// The count badge. Frappe colours it by the shortcut's own stats
+		// filter, so the semantic colours from the status system carry through.
+		.indicator-pill.no-indicator-dot {
+			font-size: var(--text-xs);
+			font-weight: 600;
+		}
+
+		&:hover {
+			border-color: var(--jk-primary);
+			box-shadow: var(--jk-shadow-md);
+			transform: translateY(-1px);
+
+			.widget-title { color: var(--jk-primary-hover); }
+
+			svg {
+				color: var(--jk-primary);
+				transform: translateX(2px);
+			}
+		}
+
+		&:active {
+			transform: translateY(0);
+			box-shadow: var(--jk-shadow-xs);
+		}
+	}
+
+	// ======================================================================
+	// Number card — the KPI
+	// ======================================================================
+	.widget.number-widget-box {
+		min-height: 104px;
+
+		.widget-body {
+			display: flex;
+			align-items: flex-end;
+			flex: 1;
+			margin-top: 6px;
+		}
+
+		.widget-content {
+			display: flex;
+			align-items: baseline;
+			flex-wrap: wrap;
+			gap: 8px;
+			width: 100%;
+		}
+
+		// The value carries the card. Tabular figures stop the number
+		// jittering when it refreshes.
+		.number {
+			font-size: 26px;
+			line-height: 1.15;
+			font-weight: 600;
+			color: var(--jk-text);
+			letter-spacing: -0.02em;
+			font-variant-numeric: tabular-nums;
+			font-feature-settings: "tnum";
+		}
+
+		// ---- Trend ----
+		// Present only when the card defines a comparison period, so it is
+		// styled to be absent without leaving a hole.
+		.percentage-stat-area {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin: 0;
+		}
+
+		.card-stats {
+			font-size: var(--text-xs);
+			font-weight: 600;
+			padding: 2px 7px;
+			border-radius: var(--jk-radius-pill);
+			border: 1px solid transparent;
+
+			&.text-success,
+			&.green {
+				color: var(--jk-green-700);
+				background: var(--jk-success-bg);
+				border-color: var(--jk-success-border);
+			}
+
+			&.text-danger,
+			&.red {
+				color: var(--jk-red-700);
+				background: var(--jk-danger-bg);
+				border-color: var(--jk-danger-border);
+			}
+		}
+
+		.indicator-pill-round {
+			&.green { background: var(--jk-success); }
+			&.red { background: var(--jk-danger); }
+		}
+
+		// ---- Loading ----
+		// A skeleton rather than the word "Loading", so the card does not
+		// change height when the value arrives.
+		.number-card-loading {
+			display: block;
+			width: 72px;
+			height: 26px;
+			border-radius: var(--jk-radius-sm);
+			@include jk-skeleton;
+			color: transparent;
+			font-size: 0;
+		}
+	}
+
+	// ======================================================================
+	// Chart
+	// ======================================================================
+	// Frappe's chart engine is kept as-is; only the container around it is
+	// rebuilt. The axis, legend and tooltip colours already follow the theme,
+	// because the --charts-* variables were mapped with the token layer.
+	.widget.dashboard-widget-box {
+		.widget-head {
+			padding-bottom: 10px;
+			margin-bottom: 6px;
+			border-bottom: 1px solid var(--jk-border-subtle);
+
+			// A chart header carries a title, a timestamp, a period selector
+			// and a menu. In a narrow column those controls do not fit on one
+			// line and stock lets them run past the card edge. Allowing the
+			// header to wrap keeps them inside the card at every width.
+			flex-wrap: wrap;
+			row-gap: 6px;
+		}
+
+		// Let the title give up width before the controls are pushed out.
+		.widget-label {
+			min-width: 0;
+			flex: 1 1 auto;
+		}
+
+		.widget-control {
+			align-items: center;
+			gap: 4px;
+			flex-shrink: 0;
+			max-width: 100%;
+		}
+
+		.chart-actions .chart-menu,
+		.filter-chart {
+			border-radius: var(--jk-radius-sm);
+			color: var(--jk-text-muted);
+			border: 1px solid transparent;
+			background: transparent;
+
+			&:hover {
+				background: var(--jk-hover-bg);
+				color: var(--jk-primary);
+				border-color: var(--jk-border);
+			}
+		}
+
+		// The refresh timestamp is context, not a subtitle.
+		.frappe-timestamp {
+			font-size: var(--text-xs);
+			color: var(--jk-text-muted);
+		}
+
+		.widget-body {
+			// Sized by its chart, not stretched to the card.
+			//
+			// frappe-charts renders its SVG at a height it computes itself and
+			// appends the legend directly beneath. Making this body grow to
+			// fill the card and centre its contents (which an earlier revision
+			// did) leaves dead space above the chart and pushes the legend far
+			// below it — most visibly on dashboards, where cards in a row
+			// stretch to the tallest chart. min-height is kept only as a floor
+			// so a chart with no data still occupies a sensible area.
+			flex: 0 0 auto;
+			min-height: 180px;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+
+		.chart-container {
+			width: 100%;
+
+			// No overflow override here on purpose. An earlier revision set
+			// `svg { overflow: visible }` to stop frappe-charts clipping its
+			// axis labels, but that let legends and labels paint outside the
+			// card border — visible as text sitting below a chart card on
+			// dashboards. Frappe clips the SVG by default; keeping that
+			// behaviour keeps chart content inside the card it belongs to.
+		}
+
+		// frappe-charts renders its own tooltip outside the theme's reach
+		// until it is targeted directly.
+		.graph-svg-tip {
+			background: var(--jk-slate-900);
+			border-radius: var(--jk-radius-md);
+			box-shadow: var(--jk-shadow-lg);
+
+			.title { color: var(--jk-slate-300); }
+			.data-point-list .svg-pointer { fill: var(--jk-slate-900); }
+			ul li strong { color: #fff; }
+		}
+	}
+
+	// ======================================================================
+	// Links — grouped document lists
+	// ======================================================================
+	.widget.links-widget-box {
+		.widget-head {
+			padding-bottom: 8px;
+			margin-bottom: 4px;
+			border-bottom: 1px solid var(--jk-border-subtle);
+		}
+
+		.widget-body {
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
+			margin: 0 -8px;
+		}
+
+		.link-item {
+			border-radius: var(--jk-radius-sm);
+			padding: 6px 8px;
+			color: var(--jk-text-secondary);
+			transition:
+				background-color var(--jk-duration-fast) var(--jk-ease),
+				color var(--jk-duration-fast) var(--jk-ease);
+
+			.link-text {
+				font-size: var(--text-base);
+			}
+
+			// The trailing "new document" icon, revealed on approach.
+			svg {
+				opacity: 0;
+				color: var(--jk-primary);
+				transition: opacity var(--jk-duration-fast) var(--jk-ease);
+			}
+
+			&:hover,
+			&:focus-visible {
+				background: var(--jk-hover-bg);
+				color: var(--jk-primary);
+				text-decoration: none;
+
+				svg { opacity: 1; }
+			}
+		}
+	}
+
+	// ======================================================================
+	// Quick list — recent documents
+	// ======================================================================
+	.widget.quick-list-widget-box {
+		.quick-list-item {
+			border-radius: var(--jk-radius-sm);
+			border-bottom: 1px solid var(--jk-border-subtle);
+			transition: background-color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover { background: var(--jk-hover-bg); }
+			&:last-child { border-bottom: none; }
+		}
+	}
+
+	// ======================================================================
+	// Onboarding — setup checklists
+	// ======================================================================
+	.widget.onboarding-widget-box {
+		.onboarding-step {
+			border-radius: var(--jk-radius-sm);
+			transition: background-color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover { background: var(--jk-hover-bg); }
+
+			&.complete .step-index { color: var(--jk-success); }
+		}
+
+		.progress-bar {
+			background-color: var(--jk-primary);
+		}
+
+		.progress {
+			background-color: var(--jk-slate-100);
+			border-radius: var(--jk-radius-pill);
+		}
+	}
+
+	// ---- Responsive ------------------------------------------------------
+	@media (max-width: 767px) {
+		.widget.number-widget-box {
+			min-height: 92px;
+
+			.number { font-size: 23px; }
+		}
+
+		.widget.dashboard-widget-box .widget-body {
+			min-height: 150px;
+		}
+
+		// Controls never hide on touch, so give them a real target size.
+		.widget .widget-control .chart-menu,
+		.widget .widget-control .filter-chart {
+			min-width: 30px;
+			min-height: 30px;
+		}
+	}
+}
+
+@keyframes jk-skeleton {
+	0% { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}

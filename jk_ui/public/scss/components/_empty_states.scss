@@ -1,0 +1,80 @@
+// Empty and loading states for workspace content.
+//
+// One treatment, applied wherever the framework already tells the user that
+// there is nothing to show. No business copy is invented here: the strings
+// stay whatever Frappe or the app produced — "No Data", "No records found" —
+// and only their presentation changes.
+//
+// Scoped to the workspace canvas and to widgets, so list and report empty
+// states stay untouched for their own phases.
+
+#{$jk} {
+	// The shared look, applied through a placeholder so each consumer keeps
+	// its own selector and nothing is duplicated.
+	%jk-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		padding: 22px 16px;
+		color: var(--jk-text-muted);
+		font-size: var(--text-sm);
+		text-align: center;
+	}
+
+	// ---- Charts ----------------------------------------------------------
+	// Frappe uses one element for three states: loading, no data, and error.
+	.widget .chart-loading-state,
+	.dashboard-widget-box .chart-loading-state {
+		@extend %jk-empty;
+
+		min-height: 150px;
+		border-radius: var(--jk-radius-md);
+		background: var(--jk-surface-sunken);
+		border: 1px dashed var(--jk-border);
+	}
+
+	// The error variant keeps the framework's own semantics, tinted to the
+	// status system rather than left as raw red text on grey.
+	.widget .chart-loading-state.text-danger {
+		background: var(--jk-danger-bg);
+		border-color: var(--jk-danger-border);
+		color: var(--jk-red-700);
+	}
+
+	// ---- Widget bodies with nothing in them ------------------------------
+	// A links or quick-list card whose body rendered nothing should read as
+	// deliberate rather than broken.
+	.widget .no-result,
+	.widget .empty-state,
+	.widget .msg-box {
+		@extend %jk-empty;
+
+		background: transparent;
+		border: none;
+	}
+
+	// ---- Workspace with no content at all --------------------------------
+	.desk-page .no-result,
+	.desk-page > .msg-box {
+		@extend %jk-empty;
+
+		min-height: 220px;
+
+		.empty-state-icon,
+		img {
+			opacity: 0.5;
+			margin-bottom: 8px;
+		}
+	}
+
+	// ---- Generic skeletons -----------------------------------------------
+	// Frappe paints loading placeholders with .skeleton-card / .skeleton;
+	// giving them the same shimmer as the number card keeps every loading
+	// surface on the page consistent.
+	.desk-page .skeleton,
+	.desk-page .skeleton-card {
+		@include jk-skeleton;
+	}
+}

@@ -1,0 +1,19 @@
+// Shared mixins.
+//
+// Anything repeated in more than one component file belongs here, so a change
+// to the product's loading behaviour is made once rather than three times.
+
+// The loading shimmer used by workspace number cards, list placeholder rows
+// and generic skeletons. Keeping one definition is what makes every loading
+// surface in the product animate identically.
+@mixin jk-skeleton {
+	background: linear-gradient(
+		90deg,
+		var(--jk-slate-100) 25%,
+		var(--jk-slate-50) 50%,
+		var(--jk-slate-100) 75%
+	);
+	background-size: 200% 100%;
+	animation: jk-skeleton 1.4s ease-in-out infinite;
+	border-radius: var(--jk-radius-sm);
+}

@@ -163,7 +163,7 @@
 	.input-with-feedback,
 	select.form-control {
 		background-color: var(--jk-surface);
-		border: 1px solid var(--jk-border);
+		border: 1px solid var(--jk-field-border);
 		border-radius: var(--jk-radius-md);
 		color: var(--jk-text);
 		transition:
@@ -174,8 +174,12 @@
 			color: var(--jk-text-disabled);
 		}
 
-		&:hover:not(:disabled):not([readonly]) {
-			border-color: var(--jk-border-strong);
+		// One step darker again, so hover is still felt against the new
+		// resting border. :not(:focus) matters: this selector is more
+		// specific than :focus, so without it a focused field under the
+		// pointer would keep the hover border instead of the primary one.
+		&:hover:not(:disabled):not([readonly]):not(:focus) {
+			border-color: var(--jk-slate-400);
 		}
 
 		&:focus {
@@ -199,11 +203,6 @@
 				box-shadow: var(--jk-focus-ring-danger);
 			}
 		}
-	}
-
-	.control-label {
-		color: var(--jk-text-muted);
-		font-weight: 500;
 	}
 
 	// ---- Surfaces --------------------------------------------------------

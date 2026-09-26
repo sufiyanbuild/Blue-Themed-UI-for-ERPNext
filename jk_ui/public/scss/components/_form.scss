@@ -1,0 +1,237 @@
+// Form view: header, tabs, sections.
+//
+// Every DocType form in the installation is assembled by one framework
+// renderer from .form-section blocks, .form-column grids and a .form-tabs
+// strip. Styling those structures covers Customer, Sales Invoice, a custom
+// DocType and anything created later, with no per-DocType rules — which is
+// also why this file contains no DocType names.
+//
+// The stock form's problem is not colour: sections, labels and values all
+// carry similar weight, so a long document reads as an undifferentiated field
+// dump. These rules re-establish that hierarchy.
+
+#{$jk} {
+	// ======================================================================
+	// Tabs
+	// ======================================================================
+	.form-tabs-list {
+		background: var(--jk-surface);
+		border-bottom: 1px solid var(--jk-border);
+
+		// Long forms scroll a long way; keeping the tab strip in view means
+		// the document's structure is never more than one click away.
+		position: sticky;
+		top: var(--page-head-height, 48px);
+		z-index: 4;
+
+		.form-tabs {
+			border-bottom: none;
+			gap: 2px;
+		}
+
+		.nav-item .nav-link {
+			border: none;
+			border-radius: var(--jk-radius-sm) var(--jk-radius-sm) 0 0;
+			color: var(--jk-text-muted);
+			font-size: var(--text-base);
+			font-weight: 500;
+			padding: 10px 12px;
+			position: relative;
+			transition:
+				color var(--jk-duration-fast) var(--jk-ease),
+				background-color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover {
+				color: var(--jk-text);
+				background: var(--jk-hover-bg);
+			}
+
+			// Underlined rather than boxed, so the strip keeps one baseline.
+			&.active {
+				color: var(--jk-primary);
+				background: transparent;
+				font-weight: 600;
+
+				&::after {
+					content: "";
+					position: absolute;
+					left: 8px;
+					right: 8px;
+					bottom: -1px;
+					height: 2px;
+					border-radius: var(--jk-radius-pill) var(--jk-radius-pill) 0 0;
+					background: var(--jk-primary);
+				}
+			}
+
+			&:focus-visible {
+				box-shadow: var(--jk-focus-ring);
+			}
+		}
+	}
+
+	// ======================================================================
+	// Sections
+	// ======================================================================
+	.form-page {
+		.form-section {
+			border-bottom: 1px solid var(--jk-border-subtle);
+			padding-block: 4px;
+
+			&:last-child,
+			&.hide-border {
+				border-bottom: none;
+			}
+		}
+
+		// A section with no visible fields should take no vertical space.
+		.form-section.empty-section {
+			display: none;
+		}
+
+		// ---- Section heading ----
+		// Small caps separates the structural label from the field labels
+		// underneath it, which otherwise sit at a very similar weight.
+		.section-head {
+			font-size: 10.5px;
+			font-weight: 600;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--jk-text-muted);
+			padding-block: 10px;
+
+			&.collapsible {
+				border-radius: var(--jk-radius-sm);
+				cursor: pointer;
+				transition: color var(--jk-duration-fast) var(--jk-ease);
+
+				&:hover {
+					color: var(--jk-primary);
+				}
+			}
+
+			// The chevron should point at what it does.
+			.collapse-indicator {
+				color: var(--jk-text-muted);
+				transition: transform var(--jk-duration) var(--jk-ease);
+			}
+
+			&.collapsible:not(.collapsed) .collapse-indicator {
+				transform: rotate(90deg);
+			}
+		}
+
+		.section-body {
+			padding-bottom: 6px;
+		}
+
+		// Column gutters: stock columns sit flush, which makes two adjacent
+		// fields read as one control on wide screens.
+		.form-column {
+			padding-inline: 12px;
+		}
+	}
+
+	// ======================================================================
+	// Form messages and document state
+	// ======================================================================
+	.form-message,
+	.form-messages {
+		border-radius: var(--jk-radius-md);
+		border: 1px solid var(--jk-info-border);
+		background: var(--jk-info-bg);
+		color: var(--jk-blue-700);
+		font-size: var(--text-sm);
+
+		&.red,
+		&.danger {
+			border-color: var(--jk-danger-border);
+			background: var(--jk-danger-bg);
+			color: var(--jk-red-700);
+		}
+
+		&.orange,
+		&.yellow {
+			border-color: var(--jk-warning-border);
+			background: var(--jk-warning-bg);
+			color: var(--jk-amber-700);
+		}
+	}
+
+	// A cancelled or submitted document reads its state from the page head
+	// pill, which the status system already themes. Here only the document
+	// body needs to acknowledge it.
+	.form-page.is-cancelled,
+	[data-doc-status="2"] .form-page {
+		opacity: 0.92;
+	}
+
+	// ======================================================================
+	// Footer, sidebar, timeline
+	// ======================================================================
+	.form-footer {
+		border-top: 1px solid var(--jk-border-subtle);
+		padding-top: 12px;
+	}
+
+	.form-sidebar {
+		.sidebar-label {
+			font-size: 10.5px;
+			font-weight: 600;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--jk-text-muted);
+		}
+
+		.sidebar-menu-item,
+		.form-sidebar-item {
+			border-radius: var(--jk-radius-sm);
+			transition: background-color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover {
+				background: var(--jk-hover-bg);
+			}
+		}
+	}
+
+	.new-timeline {
+		.timeline-item .timeline-content {
+			border-radius: var(--jk-radius-md);
+		}
+
+		.timeline-dot,
+		.timeline-badge {
+			border-color: var(--jk-border);
+		}
+
+		.comment-input-wrapper .comment-input-container {
+			border-radius: var(--jk-radius-md);
+			border-color: var(--jk-border);
+		}
+	}
+
+	// ======================================================================
+	// Responsive
+	// ======================================================================
+	@media (max-width: 767px) {
+		.form-tabs-list {
+			// The strip scrolls horizontally rather than wrapping, so the
+			// first field stays above the fold.
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+
+			.form-tabs {
+				flex-wrap: nowrap;
+			}
+
+			.nav-item .nav-link {
+				white-space: nowrap;
+				padding: 10px;
+			}
+		}
+
+		.form-page .form-column {
+			padding-inline: 4px;
+		}
+	}
+}

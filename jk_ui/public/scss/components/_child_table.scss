@@ -1,0 +1,253 @@
+// Child tables (Frappe grids).
+//
+// One grid implementation serves every child table in the product — Sales
+// Order Items, Taxes, a custom DocType's rows — so these rules are global by
+// construction:
+//
+//   .form-grid-container > .form-grid
+//       .grid-heading-row > .grid-row > .data-row
+//       .grid-body > .rows > .grid-row > .data-row
+//           .row-check / .row-index / .col.grid-static-col[.text-right]
+//               .field-area   (the editor, when the row is open)
+//               .static-area  (the rendered value)
+//       .grid-empty
+//   .grid-footer > .grid-buttons | .grid-pagination | .grid-bulk-actions
+//
+// Frappe already marks an invalid required cell with .error, so validation
+// state is styleable without a line of JavaScript.
+
+#{$jk} {
+	.form-grid-container {
+		border-radius: var(--jk-radius-md);
+	}
+
+	.form-grid {
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-md);
+		overflow: hidden;
+		background: var(--jk-surface);
+
+		// ==================================================================
+		// Heading
+		// ==================================================================
+		.grid-heading-row {
+			background: var(--jk-surface-sunken);
+			border-bottom: 1px solid var(--jk-border);
+
+			.static-area {
+				font-size: 10.5px;
+				font-weight: 600;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				color: var(--jk-text-muted);
+			}
+
+			// A required column, flagged in the header rather than only once
+			// the row is already wrong.
+			.static-area.reqd::after {
+				content: " *";
+				color: var(--jk-danger);
+			}
+
+			.row-index span {
+				color: var(--jk-text-disabled);
+			}
+		}
+
+		// ==================================================================
+		// Rows
+		// ==================================================================
+		.grid-body {
+			.rows .grid-row {
+				border-bottom: 1px solid var(--jk-border-subtle);
+				transition: background-color var(--jk-duration-fast) var(--jk-ease);
+
+				&:last-child {
+					border-bottom: none;
+				}
+
+				&:hover {
+					background: var(--jk-hover-bg);
+				}
+
+				// The open (editing) row is the user's current context.
+				&.grid-row-open {
+					background: var(--jk-surface);
+					box-shadow: var(--jk-shadow-sm);
+					border-bottom-color: var(--jk-border);
+				}
+			}
+
+			.data-row .col {
+				font-size: var(--text-sm);
+				color: var(--jk-text-secondary);
+			}
+
+			// Numeric columns line up only with tabular figures.
+			.data-row .col.text-right {
+				font-variant-numeric: tabular-nums;
+				font-feature-settings: "tnum";
+			}
+
+			.row-index span {
+				color: var(--jk-text-muted);
+				font-variant-numeric: tabular-nums;
+			}
+		}
+
+		// ---- Selection ----
+		.grid-row-check {
+			accent-color: var(--jk-primary);
+			width: 14px;
+			height: 14px;
+			cursor: pointer;
+		}
+
+		// Stock leaves a ticked row unmarked, exactly as the list view did.
+		.grid-body .rows .grid-row:has(.grid-row-check:checked) {
+			background: var(--jk-selected-bg);
+			box-shadow: inset 2px 0 0 var(--jk-primary);
+		}
+
+		// ---- Validation ----
+		// .error is applied by the framework to a required cell left empty.
+		.data-row .col.error {
+			background: var(--jk-danger-bg);
+			box-shadow: inset 0 0 0 1px var(--jk-danger-border);
+			border-radius: var(--jk-radius-xs);
+
+			.static-area {
+				color: var(--jk-red-700);
+			}
+		}
+
+		// ---- Editable cells ----
+		// While a cell is being edited it should read as an input, not as a
+		// value that happens to accept typing.
+		.field-area .form-control {
+			border-radius: var(--jk-radius-sm);
+			border-color: var(--jk-field-border);
+			height: 28px;
+
+			&:focus {
+				border-color: var(--jk-primary);
+				box-shadow: var(--jk-focus-ring);
+			}
+		}
+
+		// ---- Row expander ----
+		.btn-open-row {
+			opacity: 0;
+			transition: opacity var(--jk-duration-fast) var(--jk-ease);
+
+			a {
+				color: var(--jk-text-muted);
+			}
+
+			&:hover a {
+				color: var(--jk-primary);
+			}
+		}
+
+		.grid-row:hover .btn-open-row,
+		.grid-row:focus-within .btn-open-row {
+			opacity: 1;
+		}
+
+		// ---- Empty ----
+		// The framework's own "No rows" string, presented deliberately.
+		.grid-empty {
+			padding: 22px 12px;
+			color: var(--jk-text-muted);
+			font-size: var(--text-sm);
+			background: var(--jk-surface);
+		}
+	}
+
+	// ======================================================================
+	// Footer controls
+	// ======================================================================
+	.grid-footer {
+		padding-top: 8px;
+
+		.grid-buttons,
+		.grid-bulk-actions {
+			display: flex;
+			gap: 6px;
+			align-items: center;
+		}
+
+		.btn-xs {
+			height: 26px;
+			border-radius: var(--jk-radius-sm);
+			font-weight: 500;
+		}
+
+		// Adding a row is the grid's primary action.
+		.grid-add-row {
+			color: var(--jk-primary);
+			border: 1px solid var(--jk-primary-subtle);
+			background: var(--jk-primary-light);
+
+			&:hover {
+				background: var(--jk-primary-subtle);
+				border-color: var(--jk-primary);
+				color: var(--jk-primary-hover);
+			}
+		}
+
+		// Destructive actions stay recognisably destructive.
+		.grid-remove-rows,
+		.grid-remove-all-rows {
+			background: var(--jk-danger-bg);
+			border: 1px solid var(--jk-danger-border);
+			color: var(--jk-red-700);
+
+			&:hover {
+				background: var(--jk-danger);
+				border-color: var(--jk-danger);
+				color: #fff;
+			}
+		}
+
+		.grid-pagination .btn {
+			border-radius: var(--jk-radius-sm);
+		}
+	}
+
+	// ======================================================================
+	// Responsive
+	// ======================================================================
+	@media (max-width: 991px) {
+		// A wide grid must scroll inside its own container rather than
+		// widening the page — the single most common cause of a form
+		// overflowing horizontally on a tablet or phone.
+		.form-grid-container {
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.form-grid {
+			min-width: 560px;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.form-grid .grid-body .rows .grid-row {
+			// Finger-sized rows; the expander is always available because
+			// there is no hover to reveal it.
+			.btn-open-row {
+				opacity: 1;
+			}
+		}
+
+		.grid-footer .btn-xs {
+			height: 30px;
+		}
+
+		.form-grid .grid-row-check {
+			width: 16px;
+			height: 16px;
+		}
+	}
+}

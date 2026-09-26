@@ -154,6 +154,61 @@
 	--bg-light-gray: var(--jk-slate-50);
 	--text-on-light-gray: var(--jk-text-muted);
 
+
+	// ---- Espresso semantic layer ----------------------------------------
+	// v16 layers a second, newer set of tokens over the primitives:
+	// --surface-* for backgrounds, --ink-* for foregrounds, --outline-* for
+	// borders. The desk chrome (sidebar, menus, modals, cards) is built almost
+	// entirely from these, so mapping them is what carries the theme into the
+	// application shell rather than only the page body.
+	--surface-white: var(--jk-surface);
+	--surface-modal: var(--jk-surface);
+	--surface-cards: var(--jk-card);
+	--surface-menu-bar: var(--jk-surface);
+	--surface-selected: var(--jk-selected-bg);
+	--surface-gray-1: var(--jk-slate-50);
+	--surface-gray-2: var(--jk-slate-100);
+	--surface-gray-3: var(--jk-slate-200);
+	--surface-gray-4: var(--jk-slate-300);
+	--surface-gray-5: var(--jk-slate-700);
+	--surface-gray-6: var(--jk-slate-800);
+	--surface-gray-7: var(--jk-slate-900);
+	--surface-blue-1: var(--jk-blue-50);
+	--surface-blue-2: var(--jk-blue-100);
+	--surface-blue-3: var(--jk-primary);
+
+	--ink-white: var(--jk-surface);
+	--ink-gray-1: var(--jk-slate-200);
+	--ink-gray-2: var(--jk-slate-300);
+	--ink-gray-3: var(--jk-slate-400);
+	--ink-gray-4: var(--jk-slate-400);
+	--ink-gray-5: var(--jk-text-muted);
+	--ink-gray-6: var(--jk-text-muted);
+	--ink-gray-7: var(--jk-text-secondary);
+	--ink-gray-8: var(--jk-slate-800);
+	--ink-gray-9: var(--jk-text);
+	--ink-blue-1: var(--jk-blue-50);
+	--ink-blue-2: var(--jk-primary);
+	--ink-blue-3: var(--jk-primary-hover);
+	--ink-blue-link: var(--jk-primary);
+
+	--outline-white: var(--jk-surface);
+	--outline-gray-1: var(--jk-border-subtle);
+	--outline-gray-2: var(--jk-border);
+	--outline-gray-3: var(--jk-border-strong);
+	--outline-gray-4: var(--jk-slate-400);
+	--outline-gray-5: var(--jk-slate-800);
+	--outline-gray-modals: var(--jk-border);
+	--outline-blue-1: var(--jk-blue-200);
+
+	// ---- Sidebar ---------------------------------------------------------
+	// Frappe exposes these on :root; re-pointing them keeps the stock hover
+	// and active behaviour working while changing what it looks like.
+	--sidebar-hover-color: var(--jk-hover-bg);
+	--sidebar-active-color: var(--jk-primary-light);
+	--sidebar-border-color: var(--jk-border-strong);
+	--divider-color: var(--jk-border-subtle);
+
 	// ---- Scrollbars ------------------------------------------------------
 	--scrollbar-track-color: transparent;
 	--scrollbar-thumb-color: var(--jk-slate-300);

@@ -1,0 +1,117 @@
+// Global search.
+//
+// v16 renders the search entry point as an ordinary sidebar item, which gives
+// the single most-used control in the desk no more affordance than a link to a
+// workspace. Styling it as a field makes it read as somewhere to type, and the
+// shortcut chip teaches the keyboard route without a tooltip.
+//
+// The behaviour is untouched: clicking still opens Frappe's search modal, and
+// the modal's awesomplete results are left functional.
+
+#{$jk} {
+	.body-sidebar .navbar-search-bar .standard-sidebar-item {
+		background: var(--jk-surface-sunken);
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-md);
+		margin-bottom: 6px;
+		transition:
+			border-color var(--jk-duration-fast) var(--jk-ease),
+			background-color var(--jk-duration-fast) var(--jk-ease),
+			box-shadow var(--jk-duration-fast) var(--jk-ease);
+
+		.sidebar-item-label {
+			color: var(--jk-text-muted);
+			font-weight: 450;
+		}
+
+		.sidebar-item-icon { color: var(--jk-text-muted); }
+
+		&:hover {
+			background: var(--jk-surface);
+			border-color: var(--jk-primary);
+			box-shadow: var(--jk-focus-ring);
+
+			.sidebar-item-label { color: var(--jk-text); }
+			.sidebar-item-icon { color: var(--jk-primary); }
+		}
+
+		// The shortcut hint, rendered as a key cap.
+		.keyboard-shortcut {
+			background: var(--jk-surface);
+			border: 1px solid var(--jk-border);
+			border-radius: var(--jk-radius-xs);
+			padding: 1px 5px;
+			font-size: 10.5px;
+			font-weight: 550;
+			color: var(--jk-text-muted);
+			box-shadow: 0 1px 0 var(--jk-border);
+		}
+	}
+
+	// In the rail there is no room for a field; fall back to an icon button so
+	// the control still reads as tappable.
+	.body-sidebar-container:not(.expanded) .navbar-search-bar .standard-sidebar-item {
+		background: transparent;
+		border-color: transparent;
+		box-shadow: none;
+	}
+
+	// ---- Search modal ----------------------------------------------------
+	.navbar-modal-wrapper {
+		padding: 4px 6px !important;
+
+		input.form-control {
+			border: none;
+			box-shadow: none;
+			font-size: var(--text-lg);
+			background: transparent;
+
+			&:focus { box-shadow: none; }
+		}
+	}
+
+	.modal-divider {
+		border-color: var(--jk-border-subtle);
+	}
+
+	// Result list INSIDE THE SEARCH MODAL ONLY.
+	//
+	// Here the results already sit on the modal's own surface, so the list
+	// drops its border, background and shadow to avoid a card inside a card.
+	// This must stay scoped to the modal: awesomplete is also what renders
+	// every Link field's suggestions on ordinary forms, and those genuinely
+	// need an opaque floating surface (see components/_overlays.scss).
+	.navbar-modal-wrapper .awesomplete > ul {
+		border: none;
+		box-shadow: none;
+		background: transparent;
+
+		> li {
+			border-radius: var(--jk-radius-md);
+			padding: 8px 10px;
+			color: var(--jk-text-secondary);
+
+			&:hover,
+			&[aria-selected="true"] {
+				background: var(--jk-hover-bg);
+				color: var(--jk-text);
+			}
+
+			mark,
+			.awesomplete mark {
+				background: var(--jk-primary-subtle);
+				color: var(--jk-blue-900);
+				border-radius: var(--jk-radius-xs);
+				padding: 0 2px;
+			}
+		}
+	}
+
+	.cool-awesomebar-modal-footer {
+		background: var(--jk-surface-sunken);
+		border-top: 1px solid var(--jk-border-subtle);
+		border-radius: 0 0 var(--jk-radius-xl) var(--jk-radius-xl);
+
+		.help-navigation { color: var(--jk-text-muted); }
+	}
+}

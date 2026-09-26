@@ -1,0 +1,173 @@
+// Overlays: dropdown menus, tooltips and popovers.
+//
+// The last framework surfaces that float above the page. They appear on every
+// screen in the product — action menus, breadcrumb menus, the datatable's
+// column menu, field tooltips — so they are the final piece needed for the
+// interface to feel like one system rather than a themed page with unthemed
+// furniture on top.
+
+#{$jk} {
+	// ======================================================================
+	// Dropdown menus
+	// ======================================================================
+	.dropdown-menu {
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-lg);
+		box-shadow: var(--jk-shadow-lg);
+		background: var(--jk-surface);
+		padding: 5px;
+
+		.dropdown-item {
+			border-radius: var(--jk-radius-sm);
+			color: var(--jk-text-secondary);
+			font-size: var(--text-sm);
+			padding: 7px 10px;
+			transition:
+				background-color var(--jk-duration-fast) var(--jk-ease),
+				color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover,
+			&:focus {
+				background: var(--jk-hover-bg);
+				color: var(--jk-primary);
+			}
+
+			&.active,
+			&.selected {
+				background: var(--jk-primary-light);
+				color: var(--jk-primary-hover);
+				font-weight: 550;
+			}
+
+			&:focus-visible {
+				box-shadow: var(--jk-focus-ring);
+			}
+
+			// A destructive entry should not look like the rest of the list.
+			&.text-danger,
+			&.dropdown-item-danger {
+				color: var(--jk-danger);
+
+				&:hover {
+					background: var(--jk-danger-bg);
+					color: var(--jk-red-700);
+				}
+			}
+		}
+
+		.dropdown-divider {
+			border-top-color: var(--jk-border-subtle);
+			margin: 4px 0;
+		}
+
+		.dropdown-header {
+			font-size: 10.5px;
+			font-weight: 600;
+			letter-spacing: 0.05em;
+			text-transform: uppercase;
+			color: var(--jk-text-muted);
+			padding: 6px 10px 4px;
+		}
+	}
+
+	// The datatable's own column menu, which does not use .dropdown-menu.
+	.dt-dropdown__list {
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-md);
+		box-shadow: var(--jk-shadow-lg);
+		background: var(--jk-surface);
+		padding: 4px;
+	}
+
+	.dt-dropdown__list-item {
+		border-radius: var(--jk-radius-sm);
+		font-size: var(--text-sm);
+		color: var(--jk-text-secondary);
+
+		&:hover {
+			background: var(--jk-hover-bg);
+			color: var(--jk-primary);
+		}
+	}
+
+
+	// ======================================================================
+	// Autocomplete menus (Link fields, grid link cells, tag inputs)
+	// ======================================================================
+	// Awesomplete renders these inline in the document flow, so without an
+	// opaque surface of their own the suggestions show the page through them
+	// and collide with whatever sits underneath. Frappe's stock CSS supplies
+	// that surface; these rules restate it in the theme's own language.
+	.awesomplete > ul {
+		background: var(--jk-surface);
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-md);
+		box-shadow: var(--jk-shadow-lg);
+		padding: 4px;
+
+		> li {
+			border-radius: var(--jk-radius-sm);
+			padding: 7px 10px;
+			color: var(--jk-text-secondary);
+
+			&:hover,
+			&[aria-selected="true"] {
+				background: var(--jk-hover-bg);
+				color: var(--jk-text);
+			}
+
+			mark {
+				background: var(--jk-primary-subtle);
+				color: var(--jk-blue-900);
+				border-radius: var(--jk-radius-xs);
+				padding: 0 2px;
+			}
+		}
+
+		// The trailing "create new" / "advanced search" entries Frappe appends.
+		> li:last-child {
+			border-top: 1px solid var(--jk-border-subtle);
+			margin-top: 2px;
+			padding-top: 8px;
+		}
+	}
+
+	// ======================================================================
+	// Tooltips and popovers
+	// ======================================================================
+	.tooltip {
+		.tooltip-inner {
+			background: var(--jk-slate-900);
+			color: #fff;
+			border-radius: var(--jk-radius-md);
+			font-size: var(--text-xs);
+			padding: 5px 9px;
+			box-shadow: var(--jk-shadow-md);
+		}
+
+		.arrow::before,
+		.tooltip-arrow::before {
+			border-top-color: var(--jk-slate-900);
+			border-bottom-color: var(--jk-slate-900);
+		}
+	}
+
+	.popover {
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-lg);
+		box-shadow: var(--jk-shadow-lg);
+		background: var(--jk-surface);
+
+		.popover-header {
+			background: var(--jk-surface-sunken);
+			border-bottom: 1px solid var(--jk-border-subtle);
+			border-radius: var(--jk-radius-lg) var(--jk-radius-lg) 0 0;
+			font-weight: 600;
+			color: var(--jk-text);
+		}
+
+		.popover-body {
+			color: var(--jk-text-secondary);
+		}
+	}
+}

@@ -1,0 +1,129 @@
+// Top bar.
+//
+// In v16 the top bar is .page-head: breadcrumbs and document title on the
+// left, filters and actions on the right. It is shared by every list, form,
+// report and workspace in the installation, so this is the single highest
+// -leverage surface in the desk.
+//
+// Stock renders the whole trail at one weight, which makes the current page
+// no more prominent than its ancestors, and lets the actions run together.
+
+#{$jk} {
+	.page-head {
+		background: var(--jk-surface);
+		border-bottom: 1px solid var(--jk-border);
+		transition: box-shadow var(--jk-duration) var(--jk-ease);
+	}
+
+	// Lifted only once content has scrolled under it, so a short page keeps a
+	// completely flat header. chrome.js sets one class on <body>, which avoids
+	// having to find the active page's head on every scroll frame.
+	body.jk-scrolled .page-head {
+		box-shadow: var(--jk-shadow-sm);
+	}
+
+	.page-head-content {
+		gap: var(--margin-sm);
+	}
+
+	// ---- Breadcrumbs -----------------------------------------------------
+	.navbar-breadcrumbs {
+		align-items: center;
+		gap: 2px;
+
+		li > a {
+			color: var(--jk-text-muted);
+			font-size: var(--text-sm);
+			font-weight: 450;
+			padding: 3px 6px;
+			border-radius: var(--jk-radius-sm);
+			transition:
+				background-color var(--jk-duration-fast) var(--jk-ease),
+				color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover {
+				background: var(--jk-hover-bg);
+				color: var(--jk-primary);
+				text-decoration: none;
+			}
+		}
+
+		// Frappe renders the separator as a ::after on the list item.
+		li + li::before {
+			color: var(--jk-slate-300);
+		}
+
+		// The current page is the anchor of the whole screen; give it the
+		// weight the rest of the trail gives up.
+		li:last-child > a,
+		li > a.title-text {
+			color: var(--jk-text);
+			font-weight: 600;
+			font-size: var(--text-md);
+			letter-spacing: -0.01em;
+		}
+	}
+
+	.page-title {
+		gap: 8px;
+
+		.sidebar-toggle-btn {
+			color: var(--jk-text-muted);
+			border-radius: var(--jk-radius-sm);
+			padding: 5px;
+			transition:
+				background-color var(--jk-duration-fast) var(--jk-ease),
+				color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover {
+				background: var(--jk-hover-bg);
+				color: var(--jk-primary);
+			}
+		}
+	}
+
+	// Document status sits beside the title, so it reads as part of the
+	// heading rather than as another control.
+	.page-indicator-pill {
+		font-size: var(--text-xs);
+		font-weight: 550;
+	}
+
+	// ---- Actions ---------------------------------------------------------
+	.page-actions {
+		gap: 8px;
+		align-items: center;
+
+		.standard-actions,
+		.custom-actions {
+			gap: 6px;
+			align-items: center;
+		}
+
+		// A hairline between the document's own actions and the framework's
+		// menu group, so the two stop reading as one run of buttons.
+		.standard-actions {
+			padding-left: 8px;
+			border-left: 1px solid var(--jk-border-subtle);
+		}
+
+		.btn {
+			height: 28px;
+			display: inline-flex;
+			align-items: center;
+		}
+
+		.menu-btn-group .btn,
+		.btn.btn-default {
+			color: var(--jk-text-secondary);
+		}
+	}
+
+	// ---- List filter area ------------------------------------------------
+	// Sits directly under the head on every list view; matching its border to
+	// the head keeps the two reading as one chrome block.
+	.filter-section .filter-button,
+	.filter-selector .btn {
+		border-radius: var(--jk-radius-md);
+	}
+}

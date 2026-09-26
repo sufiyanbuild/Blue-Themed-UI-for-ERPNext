@@ -1,0 +1,234 @@
+// Sidebar.
+//
+// Frappe v16 already ships the behaviour: .body-sidebar-container collapses to
+// a 50px icon rail and expands to --sidebar-width, and the page head owns the
+// toggle. None of that is reimplemented here — doing so would be a second,
+// competing implementation to keep in step with core. What is missing is
+// hierarchy: every item reads at the same weight, the active workspace is
+// barely distinguishable, and the user block is loose text at the bottom.
+//
+// These rules apply to .standard-sidebar-item, which is how Frappe renders
+// every workspace in every installed app, so CRM, Stock, HR, Manufacturing and
+// any custom module get the same treatment with no per-module configuration.
+
+#{$jk} {
+	// Slightly wider than stock: at 220px the longer standard workspace names
+	// ("Manufacturing", "Subcontracting") truncate.
+	--sidebar-width: 248px;
+
+	.body-sidebar {
+		background: var(--jk-surface);
+		// The one separator between sidebar and content. .body-sidebar is the
+		// only element on the seam that draws a vertical edge, so the border
+		// stays here rather than being duplicated onto .main-section, and the
+		// stronger token makes it read against both the white sidebar and the
+		// tinted content area. It spans the full sidebar height and therefore
+		// stays visible while the content scrolls.
+		border-right: 1px solid var(--jk-border-strong);
+		gap: 10px;
+		padding: 10px 10px 12px;
+	}
+
+	// ---- Brand header ----------------------------------------------------
+	.body-sidebar .sidebar-header {
+		padding: 6px 6px 10px;
+		margin-bottom: 2px;
+		border-bottom: 1px solid var(--jk-border-subtle);
+		border-radius: 0;
+		gap: 10px;
+
+		&:hover {
+			background: transparent;
+
+			.header-title {
+				color: var(--jk-primary);
+			}
+		}
+
+		.header-logo,
+		.sidebar-item-icon img {
+			border-radius: var(--jk-radius-md);
+			box-shadow: 0 0 0 1px var(--jk-border);
+		}
+
+		.header-title {
+			font-weight: 600;
+			font-size: var(--text-base);
+			color: var(--jk-text);
+			letter-spacing: -0.01em;
+			transition: color var(--jk-duration-fast) var(--jk-ease);
+		}
+
+		.header-subtitle {
+			font-size: var(--text-xs);
+			color: var(--jk-text-muted);
+		}
+
+		.drop-icon {
+			color: var(--jk-text-muted);
+		}
+	}
+
+	// ---- Navigation items ------------------------------------------------
+	.body-sidebar {
+		--sidebar-hover-color: var(--jk-hover-bg);
+		--sidebar-active-color: var(--jk-primary-light);
+		--sidebar-border-color: var(--jk-border-strong);
+		--divider-color: var(--jk-border-subtle);
+
+		.standard-sidebar-item {
+			border-radius: var(--jk-radius-md);
+			margin-bottom: 2px;
+			position: relative;
+			transition:
+				background-color var(--jk-duration-fast) var(--jk-ease),
+				color var(--jk-duration-fast) var(--jk-ease);
+
+			.item-anchor {
+				border-radius: var(--jk-radius-md);
+				padding-top: 7px;
+				padding-bottom: 7px;
+				gap: 10px;
+			}
+
+			.sidebar-item-label {
+				font-size: var(--text-base);
+				font-weight: 450;
+				color: var(--jk-text-secondary);
+				letter-spacing: -0.005em;
+			}
+
+			.sidebar-item-icon {
+				color: var(--jk-text-muted);
+				display: flex;
+				align-items: center;
+			}
+
+			&:hover {
+				background-color: var(--jk-hover-bg);
+
+				.sidebar-item-label { color: var(--jk-text); }
+				.sidebar-item-icon { color: var(--jk-primary); }
+			}
+		}
+
+		// The active workspace. Stock marks it with a faint background only;
+		// a left bar plus weight makes it findable at a glance in a long list.
+		.standard-sidebar-item.active-sidebar,
+		.standard-sidebar-item.selected {
+			background-color: var(--jk-primary-light);
+
+			&::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 50%;
+				transform: translateY(-50%);
+				height: 18px;
+				width: 3px;
+				border-radius: 0 var(--jk-radius-pill) var(--jk-radius-pill) 0;
+				background: var(--jk-primary);
+			}
+
+			.sidebar-item-label {
+				color: var(--jk-primary-hover);
+				font-weight: 550;
+			}
+
+			.sidebar-item-icon { color: var(--jk-primary); }
+		}
+
+		// ---- Group headings ----
+		// Frappe indents section items; rendering them as small caps turns an
+		// indent into an actual grouping cue.
+		.sidebar-item-container.section-item > .standard-sidebar-item.indent {
+			.sidebar-item-label {
+				text-transform: uppercase;
+				font-size: 10.5px;
+				letter-spacing: 0.06em;
+				font-weight: 600;
+				color: var(--jk-text-muted);
+			}
+		}
+
+		// ---- Nested children ----
+		// A guide line ties children to their parent without extra markup.
+		.sidebar-child-item.nested-container {
+			position: relative;
+			margin-left: 16px;
+			padding-left: 10px;
+
+			&::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 2px;
+				bottom: 2px;
+				width: 1px;
+				background: var(--jk-border);
+			}
+
+			.sidebar-item-label { font-size: var(--text-sm); }
+		}
+
+		.divider {
+			border-top-color: var(--jk-border-subtle);
+		}
+
+		// The rail state is a first-class layout, not a squeezed sidebar:
+		// centre the icons and drop the labels cleanly.
+		.body-sidebar-top { scrollbar-width: thin; }
+	}
+
+	// ---- Collapsed rail --------------------------------------------------
+	.body-sidebar-container:not(.expanded) .body-sidebar {
+		padding-left: 6px;
+		padding-right: 6px;
+
+		.standard-sidebar-item .item-anchor {
+			justify-content: center;
+			gap: 0;
+		}
+
+		.sidebar-header {
+			border-bottom: none;
+			padding: 4px 0 8px;
+			justify-content: center;
+		}
+	}
+
+	// ---- User block ------------------------------------------------------
+	.body-sidebar .dropdown-navbar-user.sidebar-user-block,
+	.body-sidebar .dropdown-navbar-user {
+		.sidebar-user-button {
+			padding: 7px 8px;
+			border-radius: var(--jk-radius-md);
+			border: 1px solid var(--jk-border);
+			background: var(--jk-surface);
+			gap: 10px;
+			transition:
+				border-color var(--jk-duration-fast) var(--jk-ease),
+				box-shadow var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover {
+				border-color: var(--jk-border-strong);
+				box-shadow: var(--jk-shadow-xs);
+				text-decoration: none;
+			}
+		}
+
+		.avatar-name-email span:first-child {
+			font-weight: 550;
+			color: var(--jk-text);
+		}
+
+		.avatar-name-email span:last-child {
+			color: var(--jk-text-muted);
+		}
+	}
+
+	.body-sidebar .onboarding-sidebar {
+		color: var(--jk-primary);
+		font-weight: 500;
+	}
+}

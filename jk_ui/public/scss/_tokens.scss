@@ -71,6 +71,11 @@
 	--jk-border: var(--jk-slate-200);
 	--jk-border-strong: var(--jk-slate-300);
 	--jk-border-subtle: var(--jk-slate-100);
+	// The boundary of an editable control. Deliberately one step darker than
+	// --jk-border: a field has to read as a container you can type into, and
+	// at --jk-border it disappears against a white card on a tinted page.
+	// Points at an existing ramp value rather than introducing a new colour.
+	--jk-field-border: var(--jk-slate-300);
 
 	--jk-text: var(--jk-slate-900);
 	--jk-text-secondary: var(--jk-slate-700);

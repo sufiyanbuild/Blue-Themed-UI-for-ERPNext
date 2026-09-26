@@ -1,0 +1,158 @@
+// Workspace canvas and sections.
+//
+// Every workspace in every app — standard, custom, and any created later — is
+// an Editor.js document: .ce-block elements carrying Bootstrap column classes,
+// each wrapping one .widget. Frappe owns that layout and the column maths, so
+// none of it is redefined here. What these rules add is the page rhythm the
+// stock canvas lacks: section grouping, block gutters, and a consistent
+// surface for the widgets that sit inside.
+//
+// Because the styling keys off .ce-block and .widget rather than any workspace
+// name, a workspace added tomorrow inherits all of it with no extra code.
+
+#{$jk} {
+	.desk-page.page-main-content {
+		padding-top: 4px;
+	}
+
+	// ---- Section headings ------------------------------------------------
+	// Stock renders a section title as a bare bold span, so a workspace reads
+	// as one undifferentiated run of cards. Space above, weight, and a hairline
+	// turn it into an actual grouping boundary — without adding a heavy rule
+	// for every block.
+	.ce-block .ce-header {
+		margin-top: 26px;
+		margin-bottom: 10px;
+		padding-bottom: 8px;
+		border-bottom: 1px solid var(--jk-border-subtle);
+
+		.h4,
+		b {
+			font-size: var(--text-md);
+			font-weight: 600;
+			color: var(--jk-text);
+			letter-spacing: -0.01em;
+		}
+	}
+
+	// The first heading on a page does not need to push away from anything.
+	.codex-editor__redactor > .ce-block:first-child .ce-header {
+		margin-top: 6px;
+	}
+
+	// ---- Block rhythm ----------------------------------------------------
+	// A consistent gutter between cards. Frappe's columns supply the widths;
+	// this supplies the air.
+	.codex-editor__redactor .ce-block {
+		padding-bottom: 14px;
+	}
+
+	// Cards align to the top of their row rather than stretching to match the
+	// tallest one. Frappe lays the blocks out as a wrapping flex container
+	// whose items stretch by default, so a card holding one link is dragged to
+	// the height of a neighbour holding ten, leaving hundreds of pixels of
+	// blank beneath it. Aligning to the start changes heights only — widths,
+	// wrapping and block order are untouched.
+	.codex-editor__redactor {
+		align-items: flex-start;
+	}
+
+	// ---- Widget surface --------------------------------------------------
+	// The shared card. Every widget type inherits this and then adds only what
+	// makes it different.
+	.widget {
+		padding: 14px 16px;
+		// Card height is owned by Frappe, not by this file.
+		//
+		// On a workspace, core sets `height: 100%` on the wrapper inside
+		// .ce-block__content, so a card fills the row height its column was
+		// given. An earlier revision of this file set height: 100% here too,
+		// which was redundant; overriding core's rule to `auto` was measured
+		// on several workspaces and changed no card height at all, so no
+		// override is shipped. Equal-height cards in a row are therefore
+		// stock behaviour and are left alone.
+		display: flex;
+		flex-direction: column;
+		transition:
+			border-color var(--jk-duration) var(--jk-ease),
+			box-shadow var(--jk-duration) var(--jk-ease),
+			transform var(--jk-duration) var(--jk-ease);
+
+		.widget-head {
+			align-items: flex-start;
+			margin-bottom: 0;
+		}
+
+		.widget-title {
+			font-size: var(--text-sm);
+			font-weight: 550;
+			color: var(--jk-text-secondary);
+			letter-spacing: -0.005em;
+		}
+
+		.widget-subtitle {
+			font-size: var(--text-xs);
+			color: var(--jk-text-muted);
+		}
+
+		.widget-footer:empty {
+			display: none;
+		}
+	}
+
+	// ---- Control reveal --------------------------------------------------
+	// Each card carries a "..." menu and filter controls. Shown permanently on
+	// every card they are the single biggest source of visual noise on a
+	// workspace; revealed on hover or keyboard focus they cost nothing and are
+	// still reachable. Pointer devices only — on touch there is no hover, so
+	// the controls stay visible.
+	@media (hover: hover) and (pointer: fine) {
+		.widget .widget-control {
+			opacity: 0;
+			transition: opacity var(--jk-duration) var(--jk-ease);
+		}
+
+		.widget:hover .widget-control,
+		.widget:focus-within .widget-control {
+			opacity: 1;
+		}
+
+		// In edit mode those same controls are the point of the screen, so
+		// they must never hide. Frappe adds .ce-toolbar to the editor only
+		// while it is editable, which makes edit mode detectable in CSS.
+		// Where :has() is unsupported the controls simply stay hover-revealed,
+		// which is inconvenient but not broken.
+		.codex-editor:has(.ce-toolbar) .widget .widget-control {
+			opacity: 1;
+		}
+
+		// A shortcut's count is data, not a control, so it never hides.
+		.widget.shortcut-widget-box .widget-control {
+			opacity: 1;
+		}
+	}
+
+	// ---- Focus -----------------------------------------------------------
+	// Frappe makes shortcut widgets focusable; stock gives them no visible
+	// focus style at all, which leaves keyboard users with an invisible cursor.
+	.widget:focus-visible {
+		outline: none;
+		border-color: var(--jk-primary);
+		box-shadow: var(--jk-focus-ring);
+	}
+
+	// ---- Responsive ------------------------------------------------------
+	@media (max-width: 767px) {
+		.widget {
+			padding: 12px 14px;
+		}
+
+		.ce-block .ce-header {
+			margin-top: 18px;
+		}
+
+		.codex-editor__redactor .ce-block {
+			padding-bottom: 10px;
+		}
+	}
+}

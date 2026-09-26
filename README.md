@@ -1,81 +1,168 @@
 # JK UI
 
-A global design system for Frappe and ERPNext, delivered as a custom app. It
-adds a fourth desk theme, **JK Blue**, which restyles every module, DocType,
-list, form, report, dashboard and dialog in the installation — including apps
-that are not installed yet — without modifying a single Frappe or ERPNext file.
+A modern, professional interface for Frappe and ERPNext.
 
-## How it works
+JK UI installs alongside your existing system and gives it a new look — cleaner
+layouts, clearer typography, better spacing and a blue brand identity — without
+changing how anything works. Every screen behaves exactly as before.
 
-Frappe v16's desk is built entirely on CSS custom properties, scoped by a
-`data-theme` attribute that `desk.html` renders server-side from the signed-in
-user's `User.desk_theme`. Almost every component in the desk derives from two
-primitive ramps (`--gray-*`, `--blue-*`) plus a small set of semantic variables.
+---
 
-JK UI binds its own tokens onto those variables under
-`[data-theme="jk blue"]`. Re-pointing the ramps re-skins the whole desk at
-once, so no DocType needs per-DocType styling, no DOM is scanned at runtime and
-no markup is rewritten.
+## What problem it solves
 
-```
-public/scss/_tokens.scss      --jk-* primitives and semantic aliases
-public/scss/_theme.scss       binds those onto Frappe's own variables
-public/scss/_foundation.scss  shape, elevation and interaction states
-public/scss/_switcher.scss    the theme dialog (the one unscoped block)
-public/js/theme/theme.js      registers the theme with the stock switcher
-```
+Out of the box, ERPNext looks like an engineering tool. Dense rows of text,
+almost no visual hierarchy, and screens that are hard to scan quickly. It works
+well, but it does not look like a product you would confidently put in front of
+a client.
 
-Because every rule except the theme dialog is scoped to the theme selector,
-the stylesheet paints nothing when any other theme is selected.
+JK UI changes the presentation layer only. Your data, your documents, your
+permissions and your business rules are untouched. What changes is how easy the
+system is to read and navigate:
 
-## Hooks used
+- Important actions are easy to find
+- Document status is visible at a glance
+- Long forms are broken into readable sections
+- Tables and reports are easier to scan
+- The interface works properly on tablets and phones
 
-| Hook | Purpose |
+---
+
+## Versions
+
+Built and tested against **Frappe v16** and **ERPNext v16**.
+
+---
+
+## What the JK Blue theme does
+
+JK Blue is the branded theme. Blue is used deliberately, not everywhere — for
+the things that should stand out:
+
+- Primary buttons such as Save and Submit
+- The workspace you are currently in
+- Links and clickable values
+- Selected rows
+- Charts and key figures
+- Focus outlines when navigating by keyboard
+
+Everything else stays on a calm, light blue-grey background so the content is
+what you notice first.
+
+---
+
+## What is covered
+
+| Area | What changed |
 | --- | --- |
-| `app_include_css` | the single desk stylesheet |
-| `app_include_js` | theme registration (~2 KB) |
-| `after_install` / `after_migrate` | adds `JK Blue` to the `User.desk_theme` options, idempotently |
-| `before_uninstall` | moves users back to Light and removes the option |
-| `fixtures` | ships the Property Setter so a fresh install reproduces it |
+| Sidebar | Clearer navigation, obvious current location, grouped sections |
+| Top bar | Readable breadcrumbs, separated actions, shadow when scrolling |
+| Search | Looks like a real search box, with a keyboard shortcut hint |
+| Notifications | Tidier panel, clear unread count |
+| Workspaces | Cards with spacing and grouping, tidier dashboards |
+| Dashboards | Clearer numbers, trends and charts |
+| List views | Taller rows, sticky headers, visible selection, clearer status |
+| Forms | Section headings, clearer labels, obvious required fields |
+| Child tables | Readable rows, clear required columns, tidy buttons |
+| Reports | Clean tables, clearer filters, easier scanning |
+| Dialogs | Consistent headers, footers and buttons |
+| Menus and tooltips | Matching rounded, shadowed style |
+| Mobile and tablet | Usable layouts, no sideways scrolling |
 
-No `doc_events`, no `override_doctype_class`, no core patches.
+---
 
-## Choosing the theme
+## How the three themes work
 
-Avatar menu → **Toggle Theme** (or `Ctrl/Cmd + Shift + G`). JK Blue appears
-beside the three stock themes. The choice is stored on the User record, so it
-survives refresh, navigation, logout and login.
+Your system has three themes, and each person chooses their own:
 
-Frappe's own `switch_theme` endpoint validates against a hardcoded list of its
-three themes, so selection is routed through `jk_ui.api.theme.set_theme`, which
-applies the same permission rule and rejects unknown values.
+1. **Frappe Light** — the standard ERPNext appearance, completely unchanged
+2. **Timeless Night** — the standard dark appearance, completely unchanged
+3. **JK Blue** — the branded theme this app provides
 
-## Install on another site
+This is deliberate. JK UI only paints when JK Blue is selected. If someone
+prefers the standard look, they switch back and see exactly the original
+ERPNext, with nothing left over.
+
+---
+
+## Installing
 
 ```bash
 bench get-app jk_ui <repository-url>
-bench --site <site> install-app jk_ui
+bench --site <your-site> install-app jk_ui
 bench build --app jk_ui
 ```
 
-Restart the site's web process afterwards, so it can import the new app.
+Then restart the site's web process, so it picks up the new app.
 
-## Remove safely
+---
 
-Switching back to Light or Dark in the theme dialog is enough to disable the
-theme for one user; the stylesheet then applies nothing.
+## Choosing the theme
 
-To remove it from the site entirely:
+Click your avatar at the bottom of the sidebar, or press **Ctrl + Shift + G**
+(**Cmd + Shift + G** on a Mac), and pick **JK Blue**.
 
-```bash
-bench --site <site> uninstall-app jk_ui
-bench build
-```
+The choice is saved to your user account, so it stays after refreshing,
+navigating, and logging out and back in. Each user chooses independently.
 
-`before_uninstall` moves anyone still on JK Blue back to Light and deletes the
-Property Setter, so no User record is left holding a value its field no longer
-offers. Since no core file is touched, the stock interface returns immediately.
+---
 
-## Compatibility
+## What happens to new DocTypes
 
-Developed against Frappe v16 and ERPNext v16.
+Nothing needs to be done. JK UI styles the framework itself, not individual
+document types, so any DocType, workspace, report or app added later
+automatically appears in the new design. This was verified by creating new
+DocTypes and workspaces during testing and confirming they inherited the
+styling with no extra configuration.
+
+---
+
+## What is intentionally not customised
+
+- **Light and Dark themes** — left exactly as ERPNext ships them, by design
+- **Business logic** — no calculations, validations or workflows are touched
+- **DocType definitions** — no fields, permissions or structures are changed
+- **Frappe and ERPNext core files** — never modified
+- **Report calculations** — only how results are displayed
+- **Specialised views** — Kanban, Gantt and Calendar keep their standard look
+
+---
+
+## Known limitations
+
+1. **Cancelled documents** are styled but were not visually verified, because
+   testing that would mean permanently cancelling a real document.
+2. **Reports that return no rows show an empty area.** ERPNext itself draws
+   nothing in that case, so there is nothing for the theme to style.
+3. **Row highlighting when selecting records** uses a modern browser feature.
+   In older browsers the highlight simply does not appear; nothing breaks.
+4. Some styling could not be exercised because the test system had no such data
+   — for example trend arrows on dashboard figures.
+
+---
+
+## Development architecture
+
+- A standard Frappe custom app; Frappe and ERPNext are never modified
+- Styling is driven by design tokens, so colours and spacing are defined once
+- All styling is scoped to the JK Blue theme, which is what protects Light and Dark
+- JavaScript is kept to about 4 KB and used only where styling genuinely cannot
+  do the job
+- No external frameworks or libraries
+
+Full detail is in `JK_UI_TECHNICAL_DOCUMENTATION.md`.
+
+---
+
+## Testing status
+
+Built over six reviewed stages, each verified in a real browser driving a live
+site rather than by inspecting code:
+
+- 10 standard ERPNext DocTypes plus custom ones, across lists and forms
+- Workspaces, dashboards, reports, dialogs and child tables
+- Four screen sizes from desktop to phone
+- All three themes
+- Keyboard navigation and focus checks
+- Confirmed no leftover changes to Frappe or ERPNext
+
+A plain-language guide for end users is in `JK_UI_USER_MANUAL.md`.

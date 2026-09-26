@@ -53,3 +53,10 @@ jspm_packages/
 
 # Aider AI Chat
 .aider*
+
+# Documentation and captured screenshots are handed over as files rather than
+# versioned here: the screenshots were taken on a shared development bench and
+# show another client project's records.
+docs/
+JK_UI_USER_MANUAL.md
+JK_UI_TECHNICAL_DOCUMENTATION.md

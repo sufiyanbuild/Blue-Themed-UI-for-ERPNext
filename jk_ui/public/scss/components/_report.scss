@@ -1,0 +1,227 @@
+// Reports.
+//
+// Query and script reports render through frappe-datatable, a separate
+// component from the list view with its own DOM vocabulary (.dt-*). Its engine
+// is left completely alone — no calculation, sorting, filtering or export
+// behaviour is touched — and only the presentation of its rows, header and
+// states is brought in line with the rest of the product.
+//
+// This covers every report in the installation, standard or custom, because
+// the selectors are the datatable's own.
+
+#{$jk} {
+	.report-wrapper {
+		border-radius: var(--jk-radius-md);
+	}
+
+	.datatable {
+		font-size: var(--text-sm);
+		color: var(--jk-text-secondary);
+		border: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-md);
+		overflow: hidden;
+		background: var(--jk-surface);
+
+		// ==================================================================
+		// Header
+		// ==================================================================
+		.dt-header {
+			background: var(--jk-surface-sunken);
+			border-bottom: 1px solid var(--jk-border);
+		}
+
+		.dt-cell--header {
+			background: transparent;
+
+			.dt-cell__content {
+				font-size: 10.5px;
+				font-weight: 600;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				color: var(--jk-text-muted);
+			}
+
+			.sort-indicator {
+				color: var(--jk-primary);
+			}
+		}
+
+		// The column resize grip should be findable without being decoration.
+		.dt-cell__resize-handle {
+			background: transparent;
+
+			&:hover {
+				background: var(--jk-primary-subtle);
+			}
+		}
+
+		// ---- Column filter row ----
+		.dt-row-filter {
+			background: var(--jk-surface);
+			border-bottom: 1px solid var(--jk-border-subtle);
+		}
+
+		.dt-filter.dt-input {
+			border: 1px solid var(--jk-border);
+			border-radius: var(--jk-radius-xs);
+			background: var(--jk-surface);
+			color: var(--jk-text);
+			font-size: var(--text-xs);
+
+			&:focus {
+				border-color: var(--jk-primary);
+				box-shadow: var(--jk-focus-ring);
+				outline: none;
+			}
+		}
+
+		// ==================================================================
+		// Body
+		// ==================================================================
+		.dt-row {
+			border-bottom: 1px solid var(--jk-border-subtle);
+
+			&:hover .dt-cell {
+				background: var(--jk-hover-bg);
+			}
+		}
+
+		.dt-cell {
+			border-right: 1px solid var(--jk-border-subtle);
+
+			// Frappe-datatable right-aligns numeric columns inline; tabular
+			// figures are what actually make the digits line up.
+			.dt-cell__content {
+				font-variant-numeric: tabular-nums;
+				font-feature-settings: "tnum";
+			}
+
+			a {
+				color: var(--jk-primary);
+
+				&:hover {
+					color: var(--jk-primary-hover);
+				}
+			}
+		}
+
+		// The first column stays put while a wide report scrolls sideways;
+		// it needs a visible edge or the rows appear to run underneath it.
+		.dt-cell--sticky-last {
+			border-right: 1px solid var(--jk-border);
+			background: var(--jk-surface);
+		}
+
+		// The selected / focused cell.
+		.dt-cell--focus {
+			box-shadow: inset 0 0 0 2px var(--jk-primary);
+			border-radius: var(--jk-radius-xs);
+		}
+
+		.dt-cell--highlight {
+			background: var(--jk-primary-light);
+		}
+
+		// ---- Totals ----
+		// Reports that emit a total row mark it; it should read as a summary,
+		// not as one more record.
+		.dt-row-totalRow,
+		.dt-row--total {
+			background: var(--jk-surface-sunken);
+			font-weight: 600;
+
+			.dt-cell__content {
+				color: var(--jk-text);
+			}
+		}
+
+		// ==================================================================
+		// States
+		// ==================================================================
+		// .dt-freeze is the datatable's own loading overlay.
+		.dt-freeze {
+			background: rgba(255, 255, 255, 0.72);
+			backdrop-filter: blur(1px);
+		}
+
+		.dt-freeze__message {
+			background: var(--jk-surface);
+			border: 1px solid var(--jk-border);
+			border-radius: var(--jk-radius-md);
+			box-shadow: var(--jk-shadow-md);
+			color: var(--jk-text-secondary);
+			font-size: var(--text-sm);
+			padding: 10px 16px;
+		}
+
+		.dt-scrollable {
+			// A wide report scrolls inside its own frame rather than widening
+			// the page. This is what keeps the document from becoming
+			// horizontally scrollable on a tablet.
+			overflow-x: auto;
+			background: var(--jk-surface);
+		}
+
+		.dt-footer {
+			background: var(--jk-surface-sunken);
+			border-top: 1px solid var(--jk-border);
+			color: var(--jk-text-muted);
+			font-size: var(--text-xs);
+		}
+
+		.dt-toast {
+			background: var(--jk-slate-900);
+			color: #fff;
+			border-radius: var(--jk-radius-md);
+			box-shadow: var(--jk-shadow-lg);
+		}
+	}
+
+	// ======================================================================
+	// Report page states
+	// ======================================================================
+	// Frappe's own "nothing to show" and error surfaces for a report run.
+	.report-wrapper .no-report-data,
+	.page-body .no-report-data {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		padding: 48px 16px;
+		color: var(--jk-text-muted);
+		font-size: var(--text-sm);
+		text-align: center;
+	}
+
+	// The summary strip some reports render above the table.
+	.report-summary {
+		gap: 10px;
+		flex-wrap: wrap;
+
+		.summary-item,
+		.summary-value {
+			font-variant-numeric: tabular-nums;
+		}
+
+		.summary-label {
+			color: var(--jk-text-muted);
+			font-size: var(--text-xs);
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+	}
+
+	// ======================================================================
+	// Responsive
+	// ======================================================================
+	@media (max-width: 767px) {
+		.datatable {
+			font-size: var(--text-xs);
+
+			.dt-cell--header .dt-cell__content {
+				font-size: 10px;
+			}
+		}
+	}
+}

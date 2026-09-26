@@ -1,0 +1,76 @@
+// Responsive chrome.
+//
+// Frappe already handles the structural part on narrow screens: the sidebar
+// becomes an overlay and the page head collapses its action groups. What it
+// does not do is give the overlay a scrim, size touch targets for a finger, or
+// keep the breadcrumb trail from pushing the actions off screen.
+//
+// Breakpoints follow Frappe's own so the two never disagree about when a
+// layout changes.
+
+#{$jk} {
+	@media (max-width: 991px) {
+		// The expanded sidebar floats over content at this width. A shadow
+		// makes it read as a layer above the page rather than beside it.
+		.body-sidebar-container.expanded .body-sidebar {
+			box-shadow: var(--jk-shadow-xl);
+		}
+	}
+
+	@media (max-width: 767px) {
+		// Touch targets. 36px rows are comfortable without making a long
+		// workspace list unscrollable.
+		.body-sidebar .standard-sidebar-item .item-anchor {
+			padding-top: 9px;
+			padding-bottom: 9px;
+		}
+
+		.page-head {
+			.page-head-content {
+				gap: 6px;
+			}
+
+			// On a phone the ancestors cost more than they explain: keep the
+			// current page and drop the trail.
+			.navbar-breadcrumbs li:not(:last-child) {
+				display: none;
+			}
+
+			.navbar-breadcrumbs li:last-child > a {
+				font-size: var(--text-base);
+			}
+		}
+
+		.page-actions {
+			// The separator reads as clutter once the groups wrap.
+			.standard-actions {
+				border-left: none;
+				padding-left: 0;
+			}
+
+			.btn {
+				height: 32px;
+			}
+		}
+
+		// Dialogs should use the full width rather than floating in a gutter.
+		.modal-dialog {
+			margin: 8px;
+
+			.modal-content {
+				border-radius: var(--jk-radius-lg);
+			}
+		}
+
+		.dropdown-notifications .notifications-list {
+			border-radius: var(--jk-radius-lg);
+		}
+	}
+
+	// Tablet: the sidebar stays, but the trail gives up its middle.
+	@media (min-width: 768px) and (max-width: 1099px) {
+		.navbar-breadcrumbs li:not(:first-child):not(:last-child) {
+			display: none;
+		}
+	}
+}

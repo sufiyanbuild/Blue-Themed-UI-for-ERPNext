@@ -1,0 +1,276 @@
+// List views.
+//
+// Every DocType list in the installation — standard, custom, or created
+// tomorrow — is rendered by one framework view: a .list-row-head followed by
+// .list-row elements, each built from .list-row-col cells. Nothing here names
+// a DocType, so a new one inherits the styling the moment it exists.
+//
+// The stock list is dense and flat: a 30px row, a header that scrolls away, no
+// visible selected state, and interactive cells that look identical to plain
+// text. These rules address those specifically rather than recolouring.
+
+#{$jk} {
+	// 38px gives the row room to breathe without costing a meaningful number
+	// of visible records. Frappe derives its checkbox padding from this
+	// variable, so the control re-centres itself.
+	--list-row-height: 38px;
+
+	// ======================================================================
+	// Header
+	// ======================================================================
+	.frappe-list .list-row-head {
+		background-color: var(--jk-surface-sunken);
+		border-bottom: 1px solid var(--jk-border);
+		border-radius: var(--jk-radius-md) var(--jk-radius-md) 0 0;
+
+		// Column labels are navigation, not content: small caps separates them
+		// from the data underneath at a glance.
+		.list-row-col > span,
+		.list-subject > .level-item {
+			font-size: 10.5px;
+			font-weight: 600;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--jk-text-muted);
+		}
+
+		.list-count {
+			font-size: var(--text-xs);
+			font-weight: 500;
+			color: var(--jk-text-muted);
+			text-transform: none;
+			letter-spacing: 0;
+		}
+	}
+
+	// Pinned while the rows scroll beneath it. The list body is its own
+	// scroll container, so top: 0 is correct here and is a no-op on a list
+	// short enough not to scroll.
+	.frappe-list .result-container .list-row-container:first-child {
+		position: sticky;
+		top: 0;
+		z-index: 2;
+	}
+
+	// ======================================================================
+	// Rows
+	// ======================================================================
+	.frappe-list {
+		.list-row-container {
+			border-bottom: 1px solid var(--jk-border-subtle);
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+
+		.list-row {
+			transition: background-color var(--jk-duration-fast) var(--jk-ease);
+
+			&:not(.list-row-head):hover {
+				background-color: var(--jk-hover-bg);
+
+				// Stock casts a shadow over the right-hand column on hover,
+				// which reads as a rendering artefact on a light surface.
+				.level-right {
+					box-shadow: none;
+				}
+			}
+		}
+
+		// ---- Subject ----
+		// The document's own name is the one thing every row is scanned for.
+		.list-subject .level-item.bold > a,
+		.list-subject a.ellipsis {
+			font-weight: 550;
+			color: var(--jk-text);
+			transition: color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover {
+				color: var(--jk-primary);
+				text-decoration: none;
+			}
+		}
+
+		// ---- Secondary cells ----
+		.list-row-col {
+			font-size: var(--text-sm);
+			color: var(--jk-text-secondary);
+		}
+
+		// Numbers line up on the decimal only if the figures are tabular.
+		.list-row-col.text-right {
+			font-variant-numeric: tabular-nums;
+			font-feature-settings: "tnum";
+		}
+
+		// Frappe marks every cell that filters the list on click, but styles
+		// them exactly like static text, so the affordance is invisible.
+		a.filterable,
+		.filterable {
+			color: var(--jk-text-secondary);
+			transition: color var(--jk-duration-fast) var(--jk-ease);
+
+			&:hover {
+				color: var(--jk-primary);
+				text-decoration: none;
+			}
+		}
+
+		// Status pills inherit the semantic colours set in the foundation
+		// layer; here they only need to sit correctly in a denser row.
+		.indicator-pill {
+			font-size: var(--text-xs);
+			max-width: 100%;
+		}
+
+		// ---- Row activity ----
+		// Timestamp, comment count and the like control. Only the timestamp
+		// is worth permanent space; the rest appear on approach.
+		.list-row-activity {
+			color: var(--jk-text-muted);
+			font-size: var(--text-xs);
+
+			.list-row-like .like-action.not-liked {
+				opacity: 0;
+				transition: opacity var(--jk-duration-fast) var(--jk-ease);
+			}
+		}
+
+		.list-row:hover .list-row-activity .like-action.not-liked,
+		.list-row-activity:focus-within .like-action.not-liked {
+			opacity: 1;
+		}
+
+		.tag-pill {
+			background: var(--jk-primary-light);
+			color: var(--jk-blue-700);
+			border-radius: var(--jk-radius-pill);
+			font-size: var(--text-xs);
+		}
+	}
+
+	// ======================================================================
+	// Selection
+	// ======================================================================
+	// accent-color themes the native control without replacing it, so the
+	// checkbox keeps its built-in keyboard and screen-reader behaviour.
+	.list-row-checkbox,
+	.list-header-checkbox {
+		accent-color: var(--jk-primary);
+		width: 14px;
+		height: 14px;
+		cursor: pointer;
+	}
+
+	// Stock gives a checked row no visual state at all, so a long selection is
+	// impossible to audit. :has() supplies it with no JavaScript; where it is
+	// unsupported the list simply behaves as it does today.
+	.frappe-list .list-row-container:has(.list-row-checkbox:checked) {
+		background-color: var(--jk-selected-bg);
+		box-shadow: inset 2px 0 0 var(--jk-primary);
+	}
+
+	// ---- Bulk action bar ----
+	.frappe-list .list-row-head .checkbox-actions {
+		.list-header-meta {
+			font-size: var(--text-sm);
+			font-weight: 600;
+			letter-spacing: 0;
+			text-transform: none;
+			color: var(--jk-primary-hover);
+		}
+	}
+
+	// ======================================================================
+	// Empty state
+	// ======================================================================
+	// The copy stays exactly as the framework wrote it; only its presentation
+	// changes. Nothing is invented.
+	.frappe-list .no-result {
+		padding: 48px 16px;
+
+		.msg-box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+			max-width: 420px;
+			text-align: center;
+
+			svg {
+				opacity: 0.45;
+				color: var(--jk-text-muted);
+			}
+
+			p {
+				color: var(--jk-text-muted);
+				font-size: var(--text-base);
+				margin-bottom: 0;
+			}
+
+			// The first paragraph is the explanation, the rest is the action.
+			p:first-of-type {
+				color: var(--jk-text-secondary);
+				font-weight: 500;
+			}
+
+			.btn-new-doc {
+				margin-top: 10px;
+			}
+		}
+	}
+
+	// ======================================================================
+	// Loading
+	// ======================================================================
+	.frappe-list {
+		.freeze,
+		.list-loading {
+			background: transparent;
+		}
+
+		// Frappe paints placeholder rows while a page is in flight; the
+		// shimmer matches the one used by workspace number cards so every
+		// loading surface in the product behaves the same way.
+		.list-skeleton,
+		.result .skeleton-row {
+			@include jk-skeleton;
+		}
+	}
+
+	// ======================================================================
+	// Responsive
+	// ======================================================================
+	@media (max-width: 767px) {
+		// Frappe already drops the secondary columns and reveals a status
+		// pill on the right. What it does not do is give the row a
+		// finger-sized target or let the subject use the freed width.
+		--list-row-height: 46px;
+
+		.frappe-list {
+			.list-row-col.list-subject {
+				max-width: none;
+			}
+
+			.list-subject .level-item.bold > a {
+				font-size: var(--text-base);
+			}
+
+			.list-row-head {
+				border-radius: 0;
+			}
+
+			// The like control has no hover to be revealed by.
+			.list-row-activity .like-action.not-liked {
+				opacity: 1;
+			}
+		}
+
+		.list-row-checkbox,
+		.list-header-checkbox {
+			width: 16px;
+			height: 16px;
+		}
+	}
+}

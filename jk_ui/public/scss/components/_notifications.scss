@@ -1,0 +1,141 @@
+// Notifications.
+//
+// Three surfaces, all global: the sidebar entry with its unread count, the
+// dropdown panel, and the toasts frappe.show_alert throws from anywhere in the
+// application. All three are framework-level, so every app's notifications
+// inherit this with no per-app work.
+
+#{$jk} {
+	// ---- Sidebar entry ---------------------------------------------------
+	.body-sidebar .sidebar-notification {
+		.sidebar-notification-count {
+			background: var(--jk-danger);
+			color: #fff;
+			border-radius: var(--jk-radius-pill);
+			font-size: 10.5px;
+			font-weight: 600;
+			min-width: 18px;
+			height: 18px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0 5px;
+			box-shadow: 0 0 0 2px var(--jk-surface);
+		}
+	}
+
+	// ---- Dropdown panel --------------------------------------------------
+	.dropdown-notifications {
+		.notifications-list {
+			background: var(--jk-surface);
+			border: 1px solid var(--jk-border);
+			border-radius: var(--jk-radius-xl);
+			box-shadow: var(--jk-shadow-lg);
+			overflow: hidden;
+		}
+
+		.notification-list-header {
+			background: var(--jk-surface);
+			border-bottom: 1px solid var(--jk-border-subtle);
+			padding: 10px 12px 0;
+
+			.notification-item-tabs {
+				border-bottom: none;
+				gap: 2px;
+
+				.nav-link {
+					border: none;
+					border-radius: var(--jk-radius-sm) var(--jk-radius-sm) 0 0;
+					color: var(--jk-text-muted);
+					font-weight: 500;
+					font-size: var(--text-sm);
+					padding: 6px 10px;
+					position: relative;
+
+					&:hover { color: var(--jk-text); background: var(--jk-hover-bg); }
+
+					// Underline the active tab rather than boxing it, so the
+					// panel keeps one horizontal rhythm.
+					&.active {
+						color: var(--jk-primary);
+						background: transparent;
+
+						&::after {
+							content: "";
+							position: absolute;
+							left: 8px;
+							right: 8px;
+							bottom: -1px;
+							height: 2px;
+							border-radius: var(--jk-radius-pill) var(--jk-radius-pill) 0 0;
+							background: var(--jk-primary);
+						}
+					}
+				}
+			}
+
+			.header-actions {
+				gap: 10px;
+
+				.mark-all-read,
+				.notification-settings,
+				.close-notification-dialogue {
+					color: var(--jk-text-muted);
+					cursor: pointer;
+					transition: color var(--jk-duration-fast) var(--jk-ease);
+
+					&:hover { color: var(--jk-primary); }
+				}
+			}
+		}
+
+		.notification-list-body {
+			.notification-item,
+			.recent-notification {
+				border-bottom: 1px solid var(--jk-border-subtle);
+				transition: background-color var(--jk-duration-fast) var(--jk-ease);
+
+				&:hover { background: var(--jk-hover-bg); }
+
+				&:last-child { border-bottom: none; }
+			}
+
+			// Unread items carry a blue rail, which survives any change to the
+			// row's own markup.
+			.notification-item.unread,
+			.recent-notification.unread {
+				background: var(--jk-primary-light);
+				box-shadow: inset 2px 0 0 var(--jk-primary);
+			}
+
+			.notification-message { color: var(--jk-text-secondary); }
+			.notification-timestamp { color: var(--jk-text-muted); font-size: var(--text-xs); }
+		}
+	}
+
+	// ---- Toasts ----------------------------------------------------------
+	// frappe.show_alert is the application's general-purpose feedback channel,
+	// used by every save, submit and background job in ERPNext.
+	.desk-alert {
+		background: var(--jk-surface);
+		border: 1px solid var(--jk-border);
+		border-left-width: 3px;
+		border-radius: var(--jk-radius-lg);
+		box-shadow: var(--jk-shadow-lg);
+		color: var(--jk-text);
+
+		&.green { border-left-color: var(--jk-success); }
+		&.blue { border-left-color: var(--jk-primary); }
+		&.orange, &.yellow { border-left-color: var(--jk-warning); }
+		&.red { border-left-color: var(--jk-danger); }
+
+		.alert-message { color: var(--jk-text); }
+		.alert-body { color: var(--jk-text-muted); }
+	}
+
+	// ---- Inline messages -------------------------------------------------
+	.msgprint,
+	.form-message {
+		border-radius: var(--jk-radius-md);
+	}
+}

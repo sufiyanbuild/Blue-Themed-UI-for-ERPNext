@@ -1,0 +1,239 @@
+// Form controls: labels, values, and field state.
+//
+// Frappe renders every field, of every fieldtype, through one structure:
+//
+//   .frappe-control[data-fieldtype]
+//     .form-group > .clearfix > label.control-label(.reqd) + .help
+//                 > .control-input-wrapper
+//                     .control-input            (the editable control)
+//                     .control-value            (the read-only display)
+//                     .help-box                 (the description)
+//
+// Styling that structure once covers Data, Link, Select, Date, Currency,
+// Check, Text Editor and every other fieldtype, in any DocType, including
+// fieldtypes added by a future Frappe release.
+
+#{$jk} {
+	.frappe-control {
+		// ---- Label ----
+		// Quieter than the value it describes: the label is a signpost, the
+		// value is the content. Stock renders them at almost the same weight.
+		.control-label {
+			font-size: var(--text-sm);
+			font-weight: 500;
+			color: var(--jk-text-muted);
+			margin-bottom: 4px;
+		}
+
+		// A required field should be obvious before the user submits, not
+		// after. Frappe marks the label .reqd; stock leaves it nearly silent.
+		.control-label.reqd::after {
+			content: " *";
+			color: var(--jk-danger);
+			font-weight: 700;
+		}
+
+		// ---- Read-only value ----
+		// Frappe swaps the input for .control-value on a submitted or
+		// read-only document. It should read as settled information rather
+		// than as a broken input.
+		.control-value.like-disabled-input {
+			background: var(--jk-surface-sunken);
+			border: 1px solid var(--jk-border-subtle);
+			border-radius: var(--jk-radius-md);
+			color: var(--jk-text);
+			padding: 6px 10px;
+			min-height: 30px;
+
+			a {
+				color: var(--jk-primary);
+				font-weight: 500;
+			}
+		}
+
+		// ---- Description ----
+		.help-box {
+			color: var(--jk-text-muted);
+			font-size: var(--text-xs);
+			margin-top: 4px;
+		}
+
+		// The "?" affordance beside a label.
+		.help {
+			color: var(--jk-text-disabled);
+
+			&:hover {
+				color: var(--jk-primary);
+			}
+		}
+
+		// ---- Validation ----
+		// Frappe adds .has-error to the control when validation fails.
+		&.has-error {
+			.control-label {
+				color: var(--jk-red-700);
+			}
+
+			input.form-control,
+			select.form-control,
+			textarea.form-control,
+			.control-input input {
+				border-color: var(--jk-danger);
+				background: var(--jk-danger-bg);
+
+				&:focus {
+					box-shadow: var(--jk-focus-ring-danger);
+				}
+			}
+		}
+	}
+
+	// ======================================================================
+	// Fieldtype-specific behaviour
+	// ======================================================================
+	// Grouped by the framework's own data-fieldtype attribute, so these are
+	// still global rules — no DocType is named.
+
+	// ---- Link fields ----
+	// The link is both an input and a route; the trailing control should say
+	// so without shouting.
+	.frappe-control[data-fieldtype="Link"] {
+		.link-btn {
+			background: transparent;
+
+			.btn-open {
+				color: var(--jk-text-disabled);
+				transition: color var(--jk-duration-fast) var(--jk-ease);
+			}
+		}
+
+		&:hover .link-btn .btn-open,
+		.control-input:focus-within .link-btn .btn-open {
+			color: var(--jk-primary);
+		}
+	}
+
+	// ---- Numeric and currency ----
+	// Tabular figures so columns of money line up on the decimal.
+	.frappe-control[data-fieldtype="Currency"] input,
+	.frappe-control[data-fieldtype="Float"] input,
+	.frappe-control[data-fieldtype="Int"] input,
+	.frappe-control[data-fieldtype="Percent"] input {
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+		text-align: right;
+	}
+
+	// ---- Select ----
+	.frappe-control[data-fieldtype="Select"] select.form-control {
+		cursor: pointer;
+	}
+
+	// ---- Checkbox ----
+	// The native control is kept and themed, so keyboard and screen-reader
+	// behaviour is unchanged.
+	.frappe-control[data-fieldtype="Check"] {
+		.checkbox input[type="checkbox"],
+		input.input-with-feedback[type="checkbox"] {
+			accent-color: var(--jk-primary);
+			width: 15px;
+			height: 15px;
+			cursor: pointer;
+		}
+
+		.label-area {
+			color: var(--jk-text-secondary);
+			font-size: var(--text-base);
+			cursor: pointer;
+		}
+	}
+
+	// ---- Text areas and rich text ----
+	.frappe-control[data-fieldtype="Small Text"] textarea,
+	.frappe-control[data-fieldtype="Long Text"] textarea,
+	.frappe-control[data-fieldtype="Code"] .ace_editor {
+		border-radius: var(--jk-radius-md);
+		border: 1px solid var(--jk-field-border);
+	}
+
+	.frappe-control[data-fieldtype="Text Editor"] {
+		.ql-container,
+		.ql-toolbar {
+			border-color: var(--jk-field-border);
+		}
+
+		.ql-toolbar {
+			background: var(--jk-surface-sunken);
+			border-radius: var(--jk-radius-md) var(--jk-radius-md) 0 0;
+		}
+
+		.ql-container {
+			border-radius: 0 0 var(--jk-radius-md) var(--jk-radius-md);
+			background: var(--jk-surface);
+		}
+
+		.ql-editor:focus {
+			box-shadow: none;
+		}
+	}
+
+	// ---- Date and datetime ----
+	// The picker is a floating surface and needs the same treatment as any
+	// other popover in the product.
+	.datepicker {
+		border-radius: var(--jk-radius-lg);
+		border: 1px solid var(--jk-border);
+		box-shadow: var(--jk-shadow-lg);
+		background: var(--jk-surface);
+
+		.datepicker--cell {
+			border-radius: var(--jk-radius-sm);
+
+			&.-current- {
+				color: var(--jk-primary);
+				font-weight: 600;
+			}
+
+			&.-selected- {
+				background: var(--jk-primary);
+				color: var(--jk-on-primary);
+			}
+
+			&:hover:not(.-selected-) {
+				background: var(--jk-hover-bg);
+			}
+		}
+
+		.datepicker--nav-title {
+			color: var(--jk-text);
+			font-weight: 550;
+		}
+	}
+
+	// ---- Autocomplete results (Link and Select fields) ----
+	.awesomplete > ul > li[aria-selected="true"] {
+		background: var(--jk-hover-bg);
+	}
+
+	// ======================================================================
+	// Responsive
+	// ======================================================================
+	@media (max-width: 767px) {
+		.frappe-control {
+			.control-label {
+				font-size: var(--text-base);
+			}
+
+			// Comfortable targets without making the form feel sparse.
+			input.form-control,
+			select.form-control {
+				min-height: 36px;
+			}
+		}
+
+		// A field that would otherwise be capped mid-screen on a phone.
+		.input-max-width {
+			max-width: 100%;
+		}
+	}
+}

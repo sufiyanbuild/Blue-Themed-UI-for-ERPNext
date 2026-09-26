@@ -1,0 +1,188 @@
+// List controls: the filter band, sort selector and pagination.
+//
+// These sit above and below every DocType list in the product. Stock renders
+// them as loose rows of default buttons and inputs with no grouping, so the
+// controls, the data and the page chrome all read at the same level.
+
+#{$jk} {
+	// ======================================================================
+	// Filter band
+	// ======================================================================
+	// Grouping the inline field filters and the filter/sort controls into one
+	// banded strip separates "how the list is scoped" from "the list itself".
+	// Lists and reports both render their filters into .page-form, so one
+	// rule serves both rather than duplicating it per page type.
+	.page-form {
+		background: var(--jk-surface);
+		border-bottom: 1px solid var(--jk-border);
+		padding: 8px 12px;
+		gap: 8px;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.standard-filter-section {
+		gap: 6px;
+		flex-wrap: wrap;
+
+		.form-group {
+			margin-bottom: 0;
+		}
+
+		// The inline filters are a dense row of small fields; they read best
+		// when they look like one control set rather than eight form fields.
+		.form-control.input-xs,
+		input.input-xs {
+			height: 28px;
+			font-size: var(--text-sm);
+			border-radius: var(--jk-radius-sm);
+		}
+
+		.checkbox label {
+			font-size: var(--text-sm);
+			color: var(--jk-text-secondary);
+		}
+
+		// The field-name hint Frappe attaches to each filter.
+		.tooltip-content {
+			font-size: 10px;
+			color: var(--jk-text-disabled);
+		}
+	}
+
+	.filter-section {
+		gap: 6px;
+		align-items: center;
+
+		.filter-button,
+		.filter-x-button,
+		.btn-order,
+		.sort-selector-button {
+			height: 28px;
+			border-radius: var(--jk-radius-sm);
+			color: var(--jk-text-secondary);
+			border: 1px solid var(--jk-border);
+			background: var(--jk-surface);
+
+			&:hover {
+				background: var(--jk-hover-bg);
+				border-color: var(--jk-primary);
+				color: var(--jk-primary);
+			}
+		}
+
+		// An applied filter is state, not a neutral control: it should be
+		// obvious at a glance that the list is scoped.
+		.filter-button.btn-primary-light,
+		.filter-button[data-filters]:not([data-filters=""]) {
+			background: var(--jk-primary-light);
+			border-color: var(--jk-primary-subtle);
+			color: var(--jk-primary-hover);
+		}
+
+		.btn-group > .btn + .btn {
+			margin-left: -1px;
+		}
+	}
+
+	// The filter editor popover.
+	.filter-popover,
+	.filter-edit-area {
+		.filter-field .form-control {
+			border-radius: var(--jk-radius-sm);
+		}
+	}
+
+	// ======================================================================
+	// Pagination
+	// ======================================================================
+	.list-paging-area {
+		border-top: 1px solid var(--jk-border-subtle);
+		padding: 10px 12px;
+		margin-top: 0;
+
+		// Page-size choices are one control with four positions, so they are
+		// drawn as a segmented group rather than four separate buttons.
+		.btn-group {
+			border: 1px solid var(--jk-border);
+			border-radius: var(--jk-radius-md);
+			overflow: hidden;
+			background: var(--jk-surface);
+
+			.btn-paging {
+				border: none;
+				border-radius: 0;
+				height: 28px;
+				min-width: 44px;
+				font-size: var(--text-sm);
+				font-weight: 500;
+				color: var(--jk-text-muted);
+				background: transparent;
+
+				& + .btn-paging {
+					border-left: 1px solid var(--jk-border);
+				}
+
+				&:hover {
+					background: var(--jk-hover-bg);
+					color: var(--jk-primary);
+				}
+
+				// Frappe marks the active page size with .btn-info.
+				&.btn-info {
+					background: var(--jk-primary);
+					color: var(--jk-on-primary);
+
+					&:hover {
+						background: var(--jk-primary-hover);
+						color: var(--jk-on-primary);
+					}
+				}
+			}
+		}
+
+		.btn-more {
+			height: 28px;
+			border-radius: var(--jk-radius-md);
+			border: 1px solid var(--jk-border);
+			background: var(--jk-surface);
+			color: var(--jk-text-secondary);
+			font-weight: 500;
+
+			&:hover {
+				border-color: var(--jk-primary);
+				color: var(--jk-primary);
+				background: var(--jk-hover-bg);
+			}
+		}
+	}
+
+	// ======================================================================
+	// Responsive
+	// ======================================================================
+	@media (max-width: 767px) {
+		.page-form {
+			padding: 8px;
+		}
+
+		// On a phone the inline field filters consume the whole screen before
+		// a single record is visible. The filter and sort controls remain, so
+		// nothing becomes unreachable.
+		.standard-filter-section {
+			display: none;
+		}
+
+		.list-paging-area {
+			padding: 10px 8px;
+
+			.btn-paging {
+				min-width: 40px;
+				height: 32px;
+			}
+
+			.btn-more {
+				height: 32px;
+			}
+		}
+	}
+}

@@ -1,0 +1,164 @@
+// Dialogs.
+//
+// Frappe builds every dialog in the product from one class — frappe.ui.Dialog —
+// so styling .modal-content covers confirmations, alerts, bulk-action prompts,
+// report filters, quick entry and anything an app raises with its own dialog.
+//
+// The fields inside a dialog are ordinary .frappe-control markup, so the form
+// control work from Phase 5 already applies: labels, required asterisks, focus
+// rings and validation states are inherited rather than restated here. Only
+// the dialog's own chrome is defined below.
+//
+// Frappe's dialog system is untouched: focus trapping, Escape handling and the
+// backdrop remain the framework's.
+
+#{$jk} {
+	.modal {
+		// ==================================================================
+		// Header
+		// ==================================================================
+		.modal-header {
+			padding: 14px 18px;
+			border-bottom: 1px solid var(--jk-border-subtle);
+			align-items: center;
+		}
+
+		.modal-title {
+			font-size: var(--text-md);
+			font-weight: 600;
+			color: var(--jk-text);
+			letter-spacing: -0.01em;
+		}
+
+		.modal-actions {
+			gap: 2px;
+
+			.btn-modal-close,
+			.btn-modal-minimize {
+				color: var(--jk-text-muted);
+				border-radius: var(--jk-radius-sm);
+				transition:
+					background-color var(--jk-duration-fast) var(--jk-ease),
+					color var(--jk-duration-fast) var(--jk-ease);
+
+				&:hover {
+					background: var(--jk-hover-bg);
+					color: var(--jk-text);
+				}
+
+				&:focus-visible {
+					box-shadow: var(--jk-focus-ring);
+				}
+			}
+		}
+
+		// ==================================================================
+		// Body
+		// ==================================================================
+		.modal-body {
+			padding: 16px 18px;
+
+			// A long dialog scrolls inside itself rather than growing the
+			// page behind it.
+			max-height: min(70vh, 680px);
+			overflow-y: auto;
+
+			// Inside a dialog the form has no page chrome to align to, so the
+			// section padding the form view needs is unnecessary here.
+			.form-layout .form-section {
+				border-bottom: none;
+				padding-block: 0;
+			}
+
+			.form-page .form-column {
+				padding-inline: 0;
+			}
+		}
+
+		// The message variant Frappe uses for alerts and confirmations.
+		.modal-message {
+			color: var(--jk-text-secondary);
+			font-size: var(--text-base);
+			line-height: 1.55;
+		}
+
+		.form-message-container:not(.hidden) {
+			margin-bottom: 12px;
+		}
+
+		// ==================================================================
+		// Footer
+		// ==================================================================
+		.modal-footer {
+			padding: 12px 18px;
+			border-top: 1px solid var(--jk-border-subtle);
+			background: var(--jk-surface-sunken);
+			gap: 8px;
+
+			.standard-actions,
+			.custom-actions {
+				display: flex;
+				gap: 8px;
+				align-items: center;
+			}
+
+			// The primary action is the one the dialog exists for.
+			.btn-modal-primary {
+				min-width: 88px;
+			}
+
+			// A dialog whose primary action destroys something says so.
+			.btn-modal-primary.btn-danger {
+				background: var(--jk-danger);
+				color: #fff;
+
+				&:hover {
+					background: var(--jk-red-700);
+				}
+			}
+		}
+
+		// ==================================================================
+		// Backdrop
+		// ==================================================================
+		&-backdrop.show {
+			background-color: rgba(16, 32, 56, 0.45);
+		}
+	}
+
+	// ======================================================================
+	// Responsive
+	// ======================================================================
+	@media (max-width: 767px) {
+		.modal {
+			.modal-header,
+			.modal-body,
+			.modal-footer {
+				padding-inline: 14px;
+			}
+
+			.modal-body {
+				// More of the screen is available once the browser chrome is
+				// accounted for, and dialogs on a phone are usually forms.
+				max-height: 66vh;
+			}
+
+			.modal-footer {
+				// Full-width stacked actions are easier to hit than a pair of
+				// small buttons in a corner.
+				flex-direction: column-reverse;
+				align-items: stretch;
+
+				.standard-actions,
+				.custom-actions {
+					width: 100%;
+
+					.btn {
+						flex: 1;
+						height: 38px;
+					}
+				}
+			}
+		}
+	}
+}
